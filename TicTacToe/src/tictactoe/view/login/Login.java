@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.view.login;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 
-public class LoginScreen extends BorderPane {
+public class Login extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final Label label;
@@ -24,9 +24,65 @@ public class LoginScreen extends BorderPane {
     protected final Label label4;
     protected final Button loginBtn;
     protected final Button registerBtn;
+
+    public AnchorPane getAnchorPane() {
+        return anchorPane;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public Label getLabel0() {
+        return label0;
+    }
+
+    public Label getLabel1() {
+        return label1;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public AnchorPane getAnchorPane0() {
+        return anchorPane0;
+    }
+
+    public TextField getNameTextField() {
+        return nameTextField;
+    }
+
+    public TextField getPasswordTextField() {
+        return passwordTextField;
+    }
+
+    public Label getLabel2() {
+        return label2;
+    }
+
+    public Label getLabel3() {
+        return label3;
+    }
+
+    public Label getLabel4() {
+        return label4;
+    }
+
+    public Button getLoginBtn() {
+        return loginBtn;
+    }
+
+    public Button getRegisterBtn() {
+        return registerBtn;
+    }
+
+    public Button getPlayOfflineBtn() {
+        return playOfflineBtn;
+    }
     protected final Button playOfflineBtn;
 
-    public LoginScreen() {
+    public Login() {
 
         anchorPane = new AnchorPane();
         label = new Label();
@@ -92,7 +148,7 @@ public class LoginScreen extends BorderPane {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
-        imageView.setImage(new Image(getClass().getResource("Logo.gif").toExternalForm()));
+        imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setLeft(anchorPane);
 
         BorderPane.setAlignment(anchorPane0, javafx.geometry.Pos.CENTER);

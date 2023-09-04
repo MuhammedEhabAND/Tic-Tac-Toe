@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.view.register;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,12 +9,76 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 
-public class RegisterScreen extends BorderPane {
+public class Register extends BorderPane {
 
     protected final AnchorPane anchorPane;
     protected final TextField nameTF;
     protected final TextField passwordTF;
     protected final Label label;
+
+    public AnchorPane getAnchorPane() {
+        return anchorPane;
+    }
+
+    public TextField getNameTF() {
+        return nameTF;
+    }
+
+    public TextField getPasswordTF() {
+        return passwordTF;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public Label getLabel0() {
+        return label0;
+    }
+
+    public Label getLabel1() {
+        return label1;
+    }
+
+    public Button getAlreadyHaveAccBtn() {
+        return alreadyHaveAccBtn;
+    }
+
+    public Button getSignUpBtn() {
+        return signUpBtn;
+    }
+
+    public Button getPlayOfflineBtn() {
+        return playOfflineBtn;
+    }
+
+    public TextField getConfirmPasswordTF() {
+        return confirmPasswordTF;
+    }
+
+    public Label getLabel2() {
+        return label2;
+    }
+
+    public AnchorPane getAnchorPane0() {
+        return anchorPane0;
+    }
+
+    public Label getLabel3() {
+        return label3;
+    }
+
+    public Label getLabel4() {
+        return label4;
+    }
+
+    public Label getLabel5() {
+        return label5;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
     protected final Label label0;
     protected final Label label1;
     protected final Button alreadyHaveAccBtn;
@@ -28,7 +92,7 @@ public class RegisterScreen extends BorderPane {
     protected final Label label5;
     protected final ImageView imageView;
 
-    public RegisterScreen() {
+    public Register() {
 
         anchorPane = new AnchorPane();
         nameTF = new TextField();
@@ -181,7 +245,7 @@ public class RegisterScreen extends BorderPane {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
-        imageView.setImage(new Image(getClass().getResource("Logo.gif").toExternalForm()));
+        imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setRight(anchorPane0);
 
         anchorPane.getChildren().add(nameTF);
