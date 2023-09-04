@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.view.login.play_offline;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -6,19 +6,42 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 
-public class PlayOfflineScreen extends AnchorPane {
+public class PlayOffline extends AnchorPane {
 
-    protected final Polygon polygon;
+    
     protected final Label label;
     protected final Button twoPlayerBtn;
     protected final Label label0;
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public Button getTwoPlayerBtn() {
+        return twoPlayerBtn;
+    }
+
+    public Label getLabel0() {
+        return label0;
+    }
+
+    public Button getEasyBtn() {
+        return easyBtn;
+    }
+
+    public Button getMediumBtn() {
+        return mediumBtn;
+    }
+
+    public Button getHardBtn() {
+        return hardBtn;
+    }
     protected final Button easyBtn;
     protected final Button mediumBtn;
     protected final Button hardBtn;
 
-    public PlayOfflineScreen() {
+    public PlayOffline() {
 
-        polygon = new Polygon();
         label = new Label();
         twoPlayerBtn = new Button();
         label0 = new Label();
@@ -27,17 +50,8 @@ public class PlayOfflineScreen extends AnchorPane {
         hardBtn = new Button();
 
         setId("AnchorPane");
-        setPrefHeight(400.0);
+        setPrefHeight(500.0);
         setPrefWidth(736.0);
-
-        polygon.setFill(javafx.scene.paint.Color.valueOf("#1978ae"));
-        polygon.setVisible(true);
-        polygon.setLayoutX(218.0);
-        polygon.setLayoutY(151.0);
-        polygon.setStroke(javafx.scene.paint.Color.valueOf("#ffffff00"));
-        polygon.setStrokeLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
-        polygon.setStrokeLineJoin(javafx.scene.shape.StrokeLineJoin.ROUND);
-        polygon.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
 
         label.setLayoutX(152.0);
         label.setLayoutY(75.0);
@@ -92,7 +106,6 @@ public class PlayOfflineScreen extends AnchorPane {
         hardBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         hardBtn.setFont(new Font("SansSerif Bold", 22.0));
 
-        getChildren().add(polygon);
         getChildren().add(label);
         getChildren().add(twoPlayerBtn);
         getChildren().add(label0);
