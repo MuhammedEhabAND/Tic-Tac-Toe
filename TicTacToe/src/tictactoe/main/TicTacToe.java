@@ -5,6 +5,10 @@
  */
 package tictactoe.main;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 import tictactoe.view.game_board.GameBoard;
 import tictactoe.view.login.play_offline.PlayOffline;
 import tictactoe.view.register.Register;
@@ -40,10 +44,58 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
 
 
     private Scene playOnScene; // Store the Scene for the login screen
+    
+    Socket mySocket;
+    DataInputStream dis;
+    PrintStream ps;
 
     
     @Override
     public void start(Stage stage) throws Exception {
+        
+        try {
+            mySocket = new Socket("127.0.0.1", 5007);
+            dis = new DataInputStream(mySocket.getInputStream());
+            ps = new PrintStream(mySocket.getOutputStream());
+            
+            // Login
+            ps.println("1");
+            ps.println("userName3");
+            ps.println("password2");
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        Thread thread = new Thread(() -> {
+            while (true) {
+                try {
+                    String message = dis.readLine();
+                    if(message.equals("0")) {
+                        // Log In Return
+                        if (dis.readLine().equals("0")) {
+                            // Wrong userName or password
+                        } else {
+                            // Log In Complete
+                        }
+                        
+                    } else if (message.equals("1")) {
+                        // Sign Up Return
+                        if (dis.readLine().equals("0")) {
+                            // Sign Up Failed
+                            System.out.println("Sign Up Failed");
+                        } else {
+                            // Sign Up Complete
+                            System.out.println("Sign Up Complete");
+                        }
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        
         this.stage = stage;
         login = new Login();
         register = new Register();
