@@ -59,34 +59,49 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
             ps = new PrintStream(mySocket.getOutputStream());
             
             // Login
-            ps.println("1");
-            ps.println("userName3");
+            ps.println("0");
+            ps.println("userName32");
             ps.println("password2");
             
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
+        String myUserName = "userName32";
+        
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
-                    String message = dis.readLine();
-                    if(message.equals("0")) {
-                        // Log In Return
-                        if (dis.readLine().equals("0")) {
-                            // Wrong userName or password
-                        } else {
-                            // Log In Complete
-                        }
+                    if (dis.readLine().equals("-1")) {
+                        // Server Stopped
+                        System.out.println("Server Stopped");
+                    } else {
+                        // Server is Running
+                        System.out.println("Server is Running");
+                        String remoteUserName = dis.readLine();
+                        if (remoteUserName.equals(myUserName)) {
+                            // Server returned to this user
+                            String message = dis.readLine();
+                            if(message.equals("0")) {
+                                // Log In Return
+                                if (dis.readLine().equals("0")) {
+                                    // Wrong userName or password
+                                    System.out.println("Wrong userName or password");
+                                } else {
+                                    // Log In Complete
+                                    System.out.println("Log in complete");
+                                }
                         
-                    } else if (message.equals("1")) {
-                        // Sign Up Return
-                        if (dis.readLine().equals("0")) {
-                            // Sign Up Failed
-                            System.out.println("Sign Up Failed");
-                        } else {
-                            // Sign Up Complete
-                            System.out.println("Sign Up Complete");
+                            } else if (message.equals("1")) {
+                                // Sign Up Return
+                                if (dis.readLine().equals("0")) {
+                                    // Sign Up Failed
+                                    System.out.println("Signup Failed");
+                                } else {
+                                    // Sign Up Complete
+                                    System.out.println("Signup complete");
+                                }
+                            }
                         }
                     }
                 } catch (IOException ex) {
