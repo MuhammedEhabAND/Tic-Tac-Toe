@@ -217,13 +217,13 @@ public  class PlayOnline extends BorderPane {
         imageView4.setLayoutY(14.0);
         imageView4.setPickOnBounds(true);
         imageView4.setPreserveRatio(true);
-        imageView2.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
+        imageView4.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
 
         imageView5.setFitHeight(109.0);
         imageView5.setFitWidth(105.0);
         imageView5.setPickOnBounds(true);
         imageView5.setPreserveRatio(true);
-        imageView3.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
+        imageView5.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
 
         anchorPane2.setLayoutX(30.0);
         anchorPane2.setLayoutY(50.0);
@@ -246,13 +246,13 @@ public  class PlayOnline extends BorderPane {
         imageView6.setLayoutY(14.0);
         imageView6.setPickOnBounds(true);
         imageView6.setPreserveRatio(true);
-        imageView2.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
+        imageView6.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
 
         imageView7.setFitHeight(109.0);
         imageView7.setFitWidth(105.0);
         imageView7.setPickOnBounds(true);
         imageView7.setPreserveRatio(true);
-        imageView3.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
+        imageView7.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
 
         anchorPane3.setLayoutX(444.0);
         anchorPane3.setLayoutY(50.0);
@@ -275,13 +275,13 @@ public  class PlayOnline extends BorderPane {
         imageView8.setLayoutY(14.0);
         imageView8.setPickOnBounds(true);
         imageView8.setPreserveRatio(true);
-        imageView2.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
+        imageView8.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
 
         imageView9.setFitHeight(109.0);
         imageView9.setFitWidth(105.0);
         imageView9.setPickOnBounds(true);
         imageView9.setPreserveRatio(true);
-        imageView3.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
+        imageView9.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
 
         anchorPane4.setLayoutX(168.0);
         anchorPane4.setLayoutY(50.0);
@@ -303,13 +303,13 @@ public  class PlayOnline extends BorderPane {
         imageView10.setLayoutY(14.0);
         imageView10.setPickOnBounds(true);
         imageView10.setPreserveRatio(true);
-        imageView2.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
+        imageView10.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
 
         imageView11.setFitHeight(109.0);
         imageView11.setFitWidth(105.0);
         imageView11.setPickOnBounds(true);
         imageView11.setPreserveRatio(true);
-        imageView3.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
+        imageView11.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
         hBox.setPadding(new Insets(40.0, 0.0, 0.0, 20.0));
         scrollPane.setContent(hBox);
         BorderPane.setMargin(scrollPane, new Insets(0.0));
