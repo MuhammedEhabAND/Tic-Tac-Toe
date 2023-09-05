@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.shape.Polygon;
+import tictactoe.view.play_online.PlayOnline;
 
 
 /**
@@ -30,10 +31,12 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
     private Register register;
     private PlayOffline playOff;
     private GameBoard game;
+    private PlayOnline playOn;
     private Scene loginScene; // Store the Scene for the login screen
     private Scene registerScene; // Store the Scene for the login screen
     private Scene playOffScene; // Store the Scene for the login screen
     private Scene gameScene; // Store the Scene for the login screen
+    private Scene playOnScene; // Store the Scene for the login screen
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -41,11 +44,13 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         login = new Login();
         register = new Register();
         playOff = new PlayOffline();
+        playOn=new PlayOnline();
         game = new GameBoard();
         
         login.getLoginBtn().setOnAction(this);
         login.getRegisterBtn().setOnAction(this);
         login.getPlayOfflineBtn().setOnAction(this);
+       register.getSignUpBtn().setOnAction(this);
         register.getAlreadyHaveAccBtn().setOnAction(this);
         register.getPlayOfflineBtn().setOnAction(this);
         playOff.getTwoPlayerBtn().setOnAction(this);
@@ -53,7 +58,8 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         stage.setResizable(false);
         loginScene = new Scene(login); // Create the Scene for the login screen
         registerScene = new Scene(register); // Create the Scene for the login screen
-        playOffScene = new Scene(playOff); // Create the Scene for the login screen
+        playOffScene = new Scene(playOff);; // Create the Scene for the login screen
+        playOnScene = new Scene(playOn); // Create the Scene for the login screen
         gameScene = new Scene(game); // Create the Scene for the login screen
         
         stage.setScene(loginScene); // Set the initial scene
@@ -74,6 +80,9 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         }
         if (event.getSource() == register.getAlreadyHaveAccBtn()) {
             stage.setScene(loginScene); // Set the login screen Scene again
+        }
+          if (event.getSource() == register.getSignUpBtn()||event.getSource()==login.getLoginBtn()) {
+            stage.setScene(playOnScene); // Set the login screen Scene again
         }
     }
 
