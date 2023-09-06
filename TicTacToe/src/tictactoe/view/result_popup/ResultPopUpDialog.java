@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 public  class ResultPopUpDialog extends BorderPane {
 
     protected final AnchorPane anchorPane;
+    protected final AnchorPane anchorPane1;
     protected final Button restartBtn;
     protected final Label winnerLabel;
     protected final Button exitBtn;
@@ -40,6 +41,7 @@ public  class ResultPopUpDialog extends BorderPane {
        
         mediaView = new MediaView (mediaPlayer); 
         anchorPane = new AnchorPane();
+        anchorPane1 = new AnchorPane();
         restartBtn = new Button();
         exitBtn = new Button();
         winnerLabel = new Label();
@@ -53,6 +55,13 @@ public  class ResultPopUpDialog extends BorderPane {
         anchorPane.setMinWidth(USE_PREF_SIZE);
         anchorPane.setPrefHeight(85.0);
         anchorPane.setPrefWidth(500.0); 
+        
+        anchorPane1.setMaxHeight(USE_PREF_SIZE);
+        anchorPane1.setMaxWidth(USE_PREF_SIZE);
+        anchorPane1.setMinHeight(USE_PREF_SIZE);
+        anchorPane1.setMinWidth(USE_PREF_SIZE);
+        anchorPane1.setPrefHeight(85.0);
+        anchorPane1.setPrefWidth(500.0); 
         
         winnerLabel.setLayoutX(70.0);
         winnerLabel.setLayoutY(17.0);
@@ -70,7 +79,7 @@ public  class ResultPopUpDialog extends BorderPane {
         
         
         setBottom(anchorPane);
-
+        setTop(anchorPane1);
         BorderPane.setAlignment(mediaView, javafx.geometry.Pos.CENTER);
         mediaView.setFitHeight(250.0);
         mediaView.setFitWidth(500.0);

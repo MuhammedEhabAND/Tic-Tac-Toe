@@ -395,8 +395,9 @@ public class GameBoard extends AnchorPane {
         Stage dialogStage = new Stage(StageStyle.UTILITY);
         */
         ResultPopUpDialog result = new ResultPopUpDialog();
-        
-        Stage dialogStage = new Stage(StageStyle.UTILITY);
+          
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.UNDECORATED);
         dialogStage.initModality(Modality.WINDOW_MODAL);
         System.out.println(winner);
         if(winner.equals("draw")){
