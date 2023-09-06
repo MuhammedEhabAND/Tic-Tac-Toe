@@ -1,9 +1,9 @@
 package tictactoe.model;
 
-public class Player {
-    public Player(Symbol symbol, Result result) {
+public class Player extends UserData {
+    public Player(String userName, Symbol symbol) {
+        super(userName);
         this.symbol = symbol;
-        this.result = result;
     }
 
     Symbol symbol;
@@ -15,14 +15,4 @@ public class Player {
     public void setSymbol(Symbol symbol) {
         this.symbol = symbol;
     }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    Result   result ;
 }
