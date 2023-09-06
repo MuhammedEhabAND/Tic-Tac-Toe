@@ -24,14 +24,16 @@ public class Game {
         userChoices.add(this.player2);
     }
     
-    public Player makeMove(Move move) {
+    public String makeMove(Move move) {
         Player player = userChoices.poll();
         board.addMove();
         doChanges(move, player);
         Result result = board.getSituation();
-        if(result != null && result != Result.ONGOING) {
-            return player;
-        }
+        if (result == Result.DRAW) {
+            return "draw";
+        } else if(result != null && result != Result.ONGOING) {
+            return player.getUserName();
+        } 
         return null;
     }
     
@@ -57,13 +59,7 @@ public class Game {
                 board.setSituation(Result.ONGOING);
             }
         }
-        else {
-            if(!board.getSituation().equals(Result.WIN)){
-                board.setSituation(Result.DRAW);
-            }
-        }
-        
-        System.out.println(board.getSituation() + " ggghhh");
+        else board.setSituation(Result.DRAW);
     }
     
     private void checkRows() {
@@ -76,8 +72,6 @@ public class Game {
             }
             if(count == 3) board.setSituation(Result.WIN);
         }
-        
-        System.out.println(board.getSituation() + " ggghhh rows");
     }
     
     private void checkColumns() {
@@ -90,8 +84,6 @@ public class Game {
             }
             if(count == 3) board.setSituation(Result.WIN);
         }     
-        
-        System.out.println(board.getSituation() + " ggghhh col");
     }
     
     private void checkDiagonal() {
@@ -102,8 +94,6 @@ public class Game {
             if(board.getBoard()[i][i] == start) count = count + 1;
         }
         if(count == 3) board.setSituation(Result.WIN);
-        
-        System.out.println(board.getSituation() + " ggghhh dia");
     }
     
     private void checkReverseDiagonal() {
@@ -118,7 +108,5 @@ public class Game {
             }
         }
         if(count == 3) board.setSituation(Result.WIN);
-        
-        System.out.println(board.getSituation() + " ggghhh reverse");
     }
 }
