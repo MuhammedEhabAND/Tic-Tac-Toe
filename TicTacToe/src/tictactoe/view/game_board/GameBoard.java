@@ -1,5 +1,7 @@
 package tictactoe.view.game_board;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -186,6 +188,7 @@ public class GameBoard extends AnchorPane {
         imageView1.setPreserveRatio(true);
 
         GridPane.setRowIndex(stackPane2, 1);
+        
         stackPane2.setLayoutX(10.0);
         stackPane2.setLayoutY(10.0);
         stackPane2.setPrefHeight(150.0);
@@ -352,6 +355,7 @@ public class GameBoard extends AnchorPane {
     
         if(isGameOn){
         ImageView imageClicked = (ImageView) mouseEvent.getSource();
+            System.out.println(symbol +"column : "+y +"\n row : "+ x);
         if(imageClicked.getImage() == null) {
             if(symbol.equals(Symbol.X)){
                 imageClicked.setImage(xImage);
@@ -363,7 +367,7 @@ public class GameBoard extends AnchorPane {
                 symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
             
             }
-            Move move = new Move(symbol, x, y);
+            Move move = new Move(symbol, y, x);
             String winner = game.makeMove(move);
             
             if (winner != null) {
