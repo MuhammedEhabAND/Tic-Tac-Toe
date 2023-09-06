@@ -12,6 +12,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import tictactoe.Game;
+import tictactoe.model.Move;
+import tictactoe.model.Player;
+import tictactoe.model.Result;
+import tictactoe.model.Symbol;
 
 public class GameBoard extends AnchorPane {
 
@@ -322,19 +327,30 @@ public class GameBoard extends AnchorPane {
         
 
     }
-    String player = "X";
+    
+    Player player1 = new Player("User1", Symbol.X);
+    Player player2 = new Player("CPU", Symbol.O);
+    Symbol symbol = player1.getSymbol();
+    Game game = new Game(player1, player2);
 
     protected void onTap(MouseEvent mouseEvent){
         ImageView imageClicked = (ImageView) mouseEvent.getSource();
-        if(imageClicked.getImage()==null){
-            if(player.equals("X")){
+        if(imageClicked.getImage() == null) {
+            if(symbol.equals(Symbol.X)){
                 imageClicked.setImage(xImage);
-                player = player.equals("X")?"O":"X";
-            }else{
+                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+                
+            } else {
                 imageClicked.setImage(oImage);
                 imageClicked.setFitWidth(60);
-                player = player.equals("X")?"O":"X";
+                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
             
+            }
+            
+            Move move = new Move(symbol, 0, 0);
+            Player winner = game.makeMove(move);
+            if (winner != null) {
+                System.out.println("Winner is " + winner.getUserName());
             }
         }
     }
