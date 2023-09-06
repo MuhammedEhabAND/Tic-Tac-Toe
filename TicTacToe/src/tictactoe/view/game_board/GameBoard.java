@@ -1,5 +1,6 @@
 package tictactoe.view.game_board;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +13,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import tictactoe.Game;
+import tictactoe.model.Move;
+import tictactoe.model.Player;
+import tictactoe.model.Result;
+import tictactoe.model.Symbol;
+import tictactoe.view.result_popup.ResultPopUpDialog;
 
 public class GameBoard extends AnchorPane {
 
@@ -46,9 +56,20 @@ public class GameBoard extends AnchorPane {
     protected final Label userScore;
     protected final Label cpuScore;
     protected final Label label1;
+    Player player1;
+    Player player2;
+    Symbol symbol;
+    Game game;
     Image xImage;
     Image oImage;
     public GameBoard() {
+
+        player1 = new Player("Guest-X", Symbol.X);
+        player2 = new Player("Guest-O", Symbol.O);
+        symbol = player1.getSymbol();
+
+
+        game = new Game(player1, player2);
 
         rectangle = new Rectangle();
         gridPane = new GridPane();
@@ -134,7 +155,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView, javafx.geometry.Pos.CENTER);
         imageView.setFitHeight(94.0);
         imageView.setFitWidth(117.0);
-        imageView.setOnMouseClicked(this::onTap);
+        imageView.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 0, 0);});
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
 
@@ -147,7 +168,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView0, javafx.geometry.Pos.CENTER);
         imageView0.setFitHeight(94.0);
         imageView0.setFitWidth(117.0);
-        imageView0.setOnMouseClicked(this::onTap);
+        imageView0.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 0, 1);});
         imageView0.setPickOnBounds(true);
         imageView0.setPreserveRatio(true);
 
@@ -160,7 +181,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView1, javafx.geometry.Pos.CENTER);
         imageView1.setFitHeight(94.0);
         imageView1.setFitWidth(117.0);
-        imageView1.setOnMouseClicked(this::onTap);
+        imageView1.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 0, 2);});
         imageView1.setPickOnBounds(true);
         imageView1.setPreserveRatio(true);
 
@@ -173,7 +194,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView2, javafx.geometry.Pos.CENTER);
         imageView2.setFitHeight(94.0);
         imageView2.setFitWidth(117.0);
-        imageView2.setOnMouseClicked(this::onTap);
+        imageView2.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 1, 0);});
         imageView2.setPickOnBounds(true);
         imageView2.setPreserveRatio(true);
 
@@ -187,7 +208,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView3, javafx.geometry.Pos.CENTER);
         imageView3.setFitHeight(94.0);
         imageView3.setFitWidth(117.0);
-        imageView3.setOnMouseClicked(this::onTap);
+        imageView3.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 1, 1);});
         imageView3.setPickOnBounds(true);
         imageView3.setPreserveRatio(true);
 
@@ -201,7 +222,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView4, javafx.geometry.Pos.CENTER);
         imageView4.setFitHeight(94.0);
         imageView4.setFitWidth(117.0);
-        imageView4.setOnMouseClicked(this::onTap);
+        imageView4.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 1, 2);});
         imageView4.setPickOnBounds(true);
         imageView4.setPreserveRatio(true);
 
@@ -214,7 +235,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView5, javafx.geometry.Pos.CENTER);
         imageView5.setFitHeight(94.0);
         imageView5.setFitWidth(117.0);
-        imageView5.setOnMouseClicked(this::onTap);
+        imageView5.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 2, 0);});
         imageView5.setPickOnBounds(true);
         imageView5.setPreserveRatio(true);
 
@@ -228,7 +249,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView6, javafx.geometry.Pos.CENTER);
         imageView6.setFitHeight(94.0);
         imageView6.setFitWidth(117.0);
-        imageView6.setOnMouseClicked(this::onTap);
+        imageView6.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 2, 1);});
         imageView6.setPickOnBounds(true);
         imageView6.setPreserveRatio(true);
 
@@ -242,7 +263,7 @@ public class GameBoard extends AnchorPane {
         StackPane.setAlignment(imageView7, javafx.geometry.Pos.CENTER);
         imageView7.setFitHeight(94.0);
         imageView7.setFitWidth(117.0);
-        imageView7.setOnMouseClicked(this::onTap);
+        imageView7.setOnMouseClicked((MouseEvent mouseEvent) -> {this.onTap(mouseEvent, 2, 2);});
         imageView7.setPickOnBounds(true);
         imageView7.setPreserveRatio(true);
 
@@ -250,7 +271,7 @@ public class GameBoard extends AnchorPane {
         label.setLayoutY(14.0);
         label.setPrefHeight(47.0);
         label.setPrefWidth(190.0);
-        label.setText("User 1");
+        label.setText(player1.getUserName());
         label.setTextFill(javafx.scene.paint.Color.WHITE);
         label.setFont(new Font("SansSerif Bold Italic", 30.0));
 
@@ -258,7 +279,7 @@ public class GameBoard extends AnchorPane {
         label0.setLayoutY(14.0);
         label0.setPrefHeight(47.0);
         label0.setPrefWidth(132.0);
-        label0.setText("CPU");
+        label0.setText(player2.getUserName());
         label0.setTextFill(javafx.scene.paint.Color.WHITE);
         label0.setFont(new Font("SansSerif Bold Italic", 30.0));
 
@@ -322,20 +343,104 @@ public class GameBoard extends AnchorPane {
         
 
     }
-    String player = "X";
-
-    protected void onTap(MouseEvent mouseEvent){
+    
+   
+    boolean isGameOn = true;
+    protected void onTap(MouseEvent mouseEvent, int x, int y){
+        label.setText(player1.getUserName());
+        label0.setText(player2.getUserName());
+    
+        if(isGameOn){
         ImageView imageClicked = (ImageView) mouseEvent.getSource();
-        if(imageClicked.getImage()==null){
-            if(player.equals("X")){
+        if(imageClicked.getImage() == null) {
+            if(symbol.equals(Symbol.X)){
                 imageClicked.setImage(xImage);
-                player = player.equals("X")?"O":"X";
-            }else{
+                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+                
+            } else {
                 imageClicked.setImage(oImage);
-                imageClicked.setFitWidth(60);
-                player = player.equals("X")?"O":"X";
+                imageClicked.setFitWidth(60);        
+                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
             
+            }
+            Move move = new Move(symbol, x, y);
+            String winner = game.makeMove(move);
+            
+            if (winner != null) {
+                isGameOn =false;
+                showPopUp(winner);
+                if (winner.equals("draw")) {
+                    // Draw
+                    System.out.println("Game is draw");
+                } else {
+                    if (winner.equals(player1.getUserName())) {
+                        // Win
+                        System.out.println("You win");
+                    } else {
+                        // Lose
+                        System.out.println("You losed");
+                        }
+                    }
+                }
             }
         }
     }
+
+    private void showPopUp(String winner) {
+        /* FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
+        Stage dialogStage = new Stage(StageStyle.UTILITY);
+        */
+        ResultPopUpDialog result = new ResultPopUpDialog();
+        
+        Stage dialogStage = new Stage(StageStyle.UTILITY);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        System.out.println(winner);
+        if(winner.equals("draw")){
+            result.getWinnerLabel().setText( winner);
+        }else{
+            result.getWinnerLabel().setText("The Winner is : " + winner);
+        }
+        result.getRestartBtn().setOnAction((event) -> {
+            reset(winner);
+            dialogStage.close();
+        });
+        
+        Scene scene = new Scene(result);
+        
+        dialogStage.setScene(scene);
+        
+        dialogStage.showAndWait();
+        
+    }
+
+    private void reset(String winner) {
+        winner = null ;
+        game = new Game(player1 , player2);
+        symbol =Symbol.X;
+        resetImage();
+        isGameOn = true;
+        
+    }
+
+    private void resetImage() {
+        imageView.setImage(null);
+        imageView0.setImage(null);
+        imageView1.setImage(null);
+        imageView2.setImage(null);
+        imageView3.setImage(null);
+        imageView4.setImage(null);
+        imageView5.setImage(null);
+        imageView6.setImage(null);
+        imageView7.setImage(null);
+        
+        imageView.setFitWidth(117.0);
+        imageView0.setFitWidth(117.0);
+        imageView1.setFitWidth(117.0);
+        imageView2.setFitWidth(117.0);
+        imageView3.setFitWidth(117.0);
+        imageView4.setFitWidth(117.0);
+        imageView5.setFitWidth(117.0);
+        imageView6.setFitWidth(117.0);
+        imageView7.setFitWidth(117.0);
+     }
 }
