@@ -22,9 +22,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.shape.Polygon;
+import tictactoe.GameType;
 import tictactoe.view.play_online.PlayOnline;
-
-
 
 /**
  *
@@ -36,6 +35,9 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
     private Register register;
     private PlayOffline playOff;
     private GameBoard game;
+    private GameBoard easyGame;
+    private GameBoard mediumGame;
+    private GameBoard hardGame;
     private PlayOnline playOn;
     private Scene loginScene; // Store the Scene for the login screen
     private Scene registerScene; // Store the Scene for the login screen
@@ -117,9 +119,12 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         playOff = new PlayOffline();
 
 
-        playOn=new PlayOnline();
+        playOn = new PlayOnline();
 
-        game = new GameBoard();
+        game = new GameBoard(GameType.EASY);
+        easyGame = new GameBoard(GameType.EASY);
+        mediumGame = new GameBoard(GameType.MEDIUM);
+        hardGame = new GameBoard(GameType.HARD);
         
         login.getLoginBtn().setOnAction(this);
         login.getRegisterBtn().setOnAction(this);
@@ -139,8 +144,6 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         playOffScene = new Scene(playOff); // Create the Scene for the login screen
         playOnScene = new Scene(playOn); // Create the Scene for the login screen
 
-        gameScene = new Scene(game); // Create the Scene for the login screen
-        
         stage.setScene(loginScene); // Set the initial scene
         stage.show();
     }
@@ -148,6 +151,19 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == playOff.getTwoPlayerBtn()) {
+            gameScene = new Scene(game);
+            stage.setScene(gameScene);
+        }
+        if (event.getSource() == playOff.getEasyBtn()) {
+            gameScene = new Scene(easyGame);
+            stage.setScene(gameScene);
+        }
+        if (event.getSource() == playOff.getMediumBtn()) {
+            gameScene = new Scene(mediumGame);
+            stage.setScene(gameScene);
+        }
+        if (event.getSource() == playOff.getHardBtn()) {
+            gameScene = new Scene(hardGame);
             stage.setScene(gameScene);
         }
         if (event.getSource() == login.getRegisterBtn()) {
@@ -161,8 +177,7 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
             stage.setScene(loginScene); // Set the login screen Scene again
         }
 
-
-          if (event.getSource() == register.getSignUpBtn()||event.getSource()==login.getLoginBtn()) {
+        if (event.getSource() == register.getSignUpBtn() || event.getSource() == login.getLoginBtn()) {
             stage.setScene(playOnScene); // Set the login screen Scene again
         }
 

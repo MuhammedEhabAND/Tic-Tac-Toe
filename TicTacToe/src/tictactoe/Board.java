@@ -42,7 +42,19 @@ public class Board {
         board [move.getRaw()][move.getColumn()] = move.getSymbol();
     }
     
+    public void setBoard(Symbol[][] symbols) {
+        board = symbols;
+    }
+    
     public Symbol[][] getBoard() {
         return board;
+    }
+    
+    public void printBoard() {
+        for(int i = 0; i < 3; i++){
+             for(int j = 0; j < 3; j++){
+                 System.out.println(i + ", " + j + ": " + board[i][j]);
+             }
+        }
     }
 }

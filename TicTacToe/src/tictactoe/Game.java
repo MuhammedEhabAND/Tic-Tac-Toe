@@ -24,6 +24,14 @@ public class Game {
         userChoices.add(this.player2);
     }
     
+    public void setBoard(Symbol[][] symbols) {
+        board.setBoard(symbols);
+    }
+    
+    public Symbol[][] getBoard() {
+        return board.getBoard();
+    }
+    
     public String makeMove(Move move) {
         Player player = userChoices.poll();
         board.addMove();
@@ -124,5 +132,9 @@ public class Game {
                     board.setSituation(Result.WIN);
                 }
             }
+    }
+    
+    public void printBoard() {
+        board.printBoard();
     }
 }

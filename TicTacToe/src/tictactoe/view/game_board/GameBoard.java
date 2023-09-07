@@ -19,6 +19,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import tictactoe.Game;
+import tictactoe.GameType;
+import tictactoe.MiniMax;
 import tictactoe.model.Move;
 import tictactoe.model.Player;
 import tictactoe.model.Result;
@@ -62,16 +64,21 @@ public class GameBoard extends AnchorPane {
     Player player2;
     Symbol symbol;
     Game game;
+    MiniMax miniMax;
+    GameType gameType;
     Image xImage;
     Image oImage;
-    public GameBoard() {
+    
+    public GameBoard(GameType gameType) {
 
         player1 = new Player("Guest-X", Symbol.X);
         player2 = new Player("Guest-O", Symbol.O);
         symbol = player1.getSymbol();
+        this.gameType = gameType;
 
 
         game = new Game(player1, player2);
+        miniMax = new MiniMax();
 
         rectangle = new Rectangle();
         gridPane = new GridPane();
@@ -343,69 +350,112 @@ public class GameBoard extends AnchorPane {
         getChildren().add(label1);
         xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
         oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
-        
-
     }
     
-   
     boolean isGameOn = true;
+    
     protected void onTap(MouseEvent mouseEvent, int x, int y){
         label.setText(player1.getUserName());
         label0.setText(player2.getUserName());
+        
+        ImageView imageClicked = (ImageView) mouseEvent.getSource();
     
         if(isGameOn){
-        ImageView imageClicked = (ImageView) mouseEvent.getSource();
-            System.out.println(symbol +"column : "+y +"\n row : "+ x);
-        if(imageClicked.getImage() == null) {
-            if(symbol.equals(Symbol.X)){
-                imageClicked.setImage(xImage);
-                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+            if(imageClicked.getImage() == null) {
+                Move move = new Move(symbol, y, x);
+                addMove(imageClicked);
+                String winner = game.makeMove(move);
+                System.out.println("guest move" + move.getRaw() + ", " + move.getColumn());
+                checkWinner(winner);
                 
-            } else {
-                imageClicked.setImage(oImage);
-                imageClicked.setFitWidth(60);        
-                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
-            
+                if ((gameType == GameType.EASY || gameType == GameType.MEDIUM || gameType == GameType.HARD) && isGameOn) {
+                    playCpu();
+                }
             }
-            Move move = new Move(symbol, y, x);
-            String winner = game.makeMove(move);
-            
-            if (winner != null) {
-                isGameOn =false;
-                showPopUp(winner);
-                if (winner.equals("draw")) {
-                    // Draw
-                    System.out.println("Game is draw");
+        }
+        
+        game.printBoard();
+        System.out.println("=========================");
+    }
+    
+    private void playCpu() {
+        ImageView imageClicked = null;
+        symbol = Symbol.O;
+        int[] bestMove = miniMax.minimax(game.getBoard(), symbol);
+                
+        int row = bestMove[0], col = bestMove[1];
+        switch (row) {
+            case 0:
+                if (col == 0) imageClicked = imageView;
+                if (col == 1) imageClicked = imageView0;
+                if (col == 2) imageClicked = imageView1;
+                break;
+            case 1:
+                if (col == 0) imageClicked = imageView2;
+                if (col == 1) imageClicked = imageView3;
+                if (col == 2) imageClicked = imageView4;
+                break;
+            case 2:
+                if (col == 0) imageClicked = imageView5;
+                if (col == 1) imageClicked = imageView6;
+                if (col == 2) imageClicked = imageView7;
+        }
+                
+        addMove(imageClicked);
+        String winner = game.makeMove(new Move(Symbol.O, col, row));
+        checkWinner(winner);
+        System.out.println("cpu move: " + row + ", " + col);
+    }
+    
+    private void addMove(ImageView imageClicked) {
+        if(isGameOn){
+            if(imageClicked.getImage() == null) {
+                if(symbol.equals(Symbol.X)){
+                    imageClicked.setImage(xImage);
+                    symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+                
                 } else {
-                    if (winner.equals(player1.getUserName())) {
-                        // Win
-                        System.out.println("You win");
-                    } else {
-                        // Lose
-                        System.out.println("You losed");
-                        }
-                    }
+                    imageClicked.setImage(oImage);
+                    imageClicked.setFitWidth(60);        
+                    symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+            
+                }
+            }
+        }
+    }
+    
+    private void checkWinner(String winner) {
+        if (winner != null) {
+            isGameOn = false;
+            showPopUp(winner);
+            if (winner.equals("draw")) {
+                // Draw
+                System.out.println("Game is draw");
+            } else {
+                if (winner.equals(player1.getUserName())) {
+                    // Win
+                    System.out.println("You win");
+                } else {
+                    // Lose
+                    System.out.println("You losed");
                 }
             }
         }
     }
 
     private void showPopUp(String winner) {
-        /* FXMLLoader loader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"));
-        Stage dialogStage = new Stage(StageStyle.UTILITY);
-        */
         ResultPopUpDialog result = new ResultPopUpDialog();
         
         Stage dialogStage = new Stage(StageStyle.UTILITY);
         dialogStage.initModality(Modality.WINDOW_MODAL);
-        System.out.println(winner);
+        System.out.println("Winner: " + winner);
         if(winner.equals("draw")){
-            result.getWinnerLabel().setText( winner);
-        }else{
+            result.getWinnerLabel().setText(winner);
+        } else {
             result.getWinnerLabel().setText("The Winner is : " + winner);
         }
         result.getRestartBtn().setOnAction((event) -> {
-            reset(winner);
+            reset();
             dialogStage.close();
         });
         
@@ -414,19 +464,21 @@ public class GameBoard extends AnchorPane {
         dialogStage.setScene(scene);
         
         dialogStage.showAndWait();
-        
     }
 
-    private void reset(String winner) {
-        winner = null ;
+    private void reset() {
+        game.printBoard();
+        System.out.println("=========================");
+        
+        
+        
         game = new Game(player1 , player2);
         symbol =Symbol.X;
-        resetImage();
+        resetImages();
         isGameOn = true;
-        
     }
 
-    private void resetImage() {
+    private void resetImages() {
         imageView.setImage(null);
         imageView0.setImage(null);
         imageView1.setImage(null);
