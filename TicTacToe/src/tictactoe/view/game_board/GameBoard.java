@@ -433,28 +433,18 @@ public class GameBoard extends AnchorPane {
             } else {
                 if (winner.equals(player1.getUserName())) {
                     // Win
+                    userScoreInt += 5;
+                    userScore.setText(String.valueOf(userScoreInt));
                     System.out.println("You win");
                 } else {
                     // Lose
+                    cpuScoreInt +=5;
+                    cpuScore.setText(String.valueOf(userScoreInt));
                     System.out.println("You losed");
-
-                    if (winner.equals(player1.getUserName())) {
-                        // Win
-                        userScoreInt += 5;
-                        userScore.setText(String.valueOf(userScoreInt));
-        
-                        System.out.println("You win");
-                    } else {
-                        // Lose
-                        cpuScoreInt +=5;
-                        cpuScore.setText(String.valueOf(userScoreInt));
-        
-                        System.out.println("You losed");
-                        }
-                    }
                 }
             }
         }
+    }
 
     private void showPopUp(String winner) {
         ResultPopUpDialog result = new ResultPopUpDialog();
@@ -462,29 +452,23 @@ public class GameBoard extends AnchorPane {
         Stage dialogStage = new Stage();
         dialogStage.initStyle(StageStyle.UNDECORATED);
         dialogStage.initModality(Modality.WINDOW_MODAL);
-        System.out.println("Winner: " + winner);
+        
         if(winner.equals("draw")){
-            result.getWinnerLabel().setText(winner);
-        } else {
-            System.out.println(winner);
-        
-            if(winner.equals("draw")){
-                result.getWinnerLabel().setText("DRAW");
-            } else {
-            
-                result.getWinnerLabel().setText("The Winner is : " + winner);
-            }
-            result.getRestartBtn().setOnAction((event) -> {
-                reset();
-                dialogStage.close();
-            });
-        
-            Scene scene = new Scene(result);
-        
-            dialogStage.setScene(scene);
-        
-            dialogStage.showAndWait();
+            result.getWinnerLabel().setText("DRAW");
+        }else{
+            result.getWinnerLabel().setText("The Winner is : " + winner);
         }
+        result.getRestartBtn().setOnAction((event) -> {
+            reset();
+            dialogStage.close();
+        });
+        
+        Scene scene = new Scene(result);
+        
+        dialogStage.setScene(scene);
+        
+        dialogStage.showAndWait();
+        
     }
 
     private void reset() {
