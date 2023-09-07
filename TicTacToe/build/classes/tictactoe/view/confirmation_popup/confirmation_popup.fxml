@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="433.0" style="-fx-background-color: #33cccc;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="74.0" layoutY="133.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="103.0" style="-fx-background-color: #1978ae;" text="YES" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Button layoutX="256.0" layoutY="132.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="103.0" style="-fx-background-color: #1978ae;" text="NO" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Label layoutX="30.0" layoutY="67.0" prefHeight="27.0" prefWidth="385.0" text="Are you sure you want to play with this player ?" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="74.0" fitWidth="82.0" layoutX="152.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../resources/loading.gif" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
