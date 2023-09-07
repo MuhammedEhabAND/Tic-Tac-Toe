@@ -1,5 +1,8 @@
 package tictactoe.view.login.play_offline;
 
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,14 +10,20 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import tictactoe.view.game_board.GameBoard;
 
-public class PlayOffline extends AnchorPane {
+public class PlayOffline extends AnchorPane implements EventHandler<ActionEvent> {
 
     
     protected final Label label;
     protected final Button twoPlayerBtn;
     protected final Label label0;
-
+    
+    public void init(){
+          new Scene(this);
+          twoPlayerBtn.setOnAction(this);
+    }
+    
     public Label getLabel() {
         return label;
     }
@@ -43,7 +52,7 @@ public class PlayOffline extends AnchorPane {
     protected final Button hardBtn;
     private  Stage stage;
     public PlayOffline(Stage stage) {
-        new Scene(this);
+        
         this.stage=stage;
         label = new Label();
         twoPlayerBtn = new Button();
@@ -115,6 +124,16 @@ public class PlayOffline extends AnchorPane {
         getChildren().add(easyBtn);
         getChildren().add(mediumBtn);
         getChildren().add(hardBtn);
+        init();
+    }
 
+   
+    @Override
+    public void handle(ActionEvent event) {
+        if(event.getSource() == twoPlayerBtn){
+            System.out.println("da5l");
+            stage.setScene(new GameBoard(stage).getScene());
+            
+        }
     }
 }

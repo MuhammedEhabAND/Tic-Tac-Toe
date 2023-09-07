@@ -1,6 +1,7 @@
 package tictactoe.view.game_board;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -25,7 +26,7 @@ import tictactoe.model.Result;
 import tictactoe.model.Symbol;
 import tictactoe.view.result_popup.ResultPopUpDialog;
 
-public class GameBoard extends AnchorPane {
+public class GameBoard extends AnchorPane implements EventHandler<Event> {
 
     protected final Rectangle rectangle;
     protected final GridPane gridPane;
@@ -66,15 +67,19 @@ public class GameBoard extends AnchorPane {
     Image oImage;
     int userScoreInt = 0;
     int cpuScoreInt = 0;
-    public GameBoard() {
-
+    Stage stage ;
+    public void init(){
+          stage.setScene(new Scene(this));
+    }
+    public GameBoard(Stage stage) {
+        this.stage = stage; 
         player1 = new Player("Guest-X", Symbol.X);
         player2 = new Player("Guest-O", Symbol.O);
         symbol = player1.getSymbol();
 
 
         game = new Game(player1, player2);
-
+        
         rectangle = new Rectangle();
         gridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -345,7 +350,7 @@ public class GameBoard extends AnchorPane {
         getChildren().add(label1);
       xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
        oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
-        
+        init();
 
     }
     
@@ -456,4 +461,9 @@ public class GameBoard extends AnchorPane {
         imageView6.setFitWidth(117.0);
         imageView7.setFitWidth(117.0);
      }
+
+    @Override
+    public void handle(Event event) {
+    
+    }
 }

@@ -29,7 +29,7 @@ public class TicTacToe extends Application {
     Socket mySocket;
     DataInputStream dis;
     PrintStream ps;
-
+    
     @Override
     public void start(Stage stage) {
 
@@ -44,6 +44,8 @@ public class TicTacToe extends Application {
         }finally{
            new Login(stage,ps,dis);
            new Register(stage, ps, dis);
+           
+           
             
         }
 
