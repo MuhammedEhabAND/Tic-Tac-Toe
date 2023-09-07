@@ -1,5 +1,8 @@
 package tictactoe.view.register;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -8,77 +11,27 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import tictactoe.model.User;
+import tictactoe.presenter.Auth.AuthenticationImpl;
+import tictactoe.utils.Constants;
+import tictactoe.utils.Validation;
+import tictactoe.view.login.Login;
+import tictactoe.view.login.play_offline.PlayOffline;
+import tictactoe.view.play_online.PlayOnline;
 
-public class Register extends BorderPane {
+import java.io.DataInputStream;
+import java.io.PrintStream;
+import java.util.concurrent.ExecutionException;
+
+public class Register extends BorderPane implements EventHandler<ActionEvent> {
 
     protected final AnchorPane anchorPane;
     protected final TextField nameTF;
     protected final TextField passwordTF;
     protected final Label label;
 
-    public AnchorPane getAnchorPane() {
-        return anchorPane;
-    }
 
-    public TextField getNameTF() {
-        return nameTF;
-    }
-
-    public TextField getPasswordTF() {
-        return passwordTF;
-    }
-
-    public Label getLabel() {
-        return label;
-    }
-
-    public Label getLabel0() {
-        return label0;
-    }
-
-    public Label getLabel1() {
-        return label1;
-    }
-
-    public Button getAlreadyHaveAccBtn() {
-        return alreadyHaveAccBtn;
-    }
-
-    public Button getSignUpBtn() {
-        return signUpBtn;
-    }
-
-    public Button getPlayOfflineBtn() {
-        return playOfflineBtn;
-    }
-
-    public TextField getConfirmPasswordTF() {
-        return confirmPasswordTF;
-    }
-
-    public Label getLabel2() {
-        return label2;
-    }
-
-    public AnchorPane getAnchorPane0() {
-        return anchorPane0;
-    }
-
-    public Label getLabel3() {
-        return label3;
-    }
-
-    public Label getLabel4() {
-        return label4;
-    }
-
-    public Label getLabel5() {
-        return label5;
-    }
-
-    public ImageView getImageView() {
-        return imageView;
-    }
     protected final Label label0;
     protected final Label label1;
     protected final Button alreadyHaveAccBtn;
@@ -91,9 +44,15 @@ public class Register extends BorderPane {
     protected final Label label4;
     protected final Label label5;
     protected final ImageView imageView;
+    private Stage stage;
+    private PlayOnline playOn;
+    DataInputStream dataInputStream;
+    PrintStream outStream;
 
-    public Register() {
-
+    public Register(Stage stage, PrintStream outStream, DataInputStream dataInputStream) {
+        this.stage = stage;
+        this.outStream = outStream;
+        this.dataInputStream = dataInputStream;
         anchorPane = new AnchorPane();
         nameTF = new TextField();
         passwordTF = new TextField();
@@ -245,7 +204,7 @@ public class Register extends BorderPane {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
-        imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
+          imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setRight(anchorPane0);
 
         anchorPane.getChildren().add(nameTF);
@@ -262,6 +221,52 @@ public class Register extends BorderPane {
         anchorPane0.getChildren().add(label4);
         anchorPane0.getChildren().add(label5);
         anchorPane0.getChildren().add(imageView);
+        init();
 
     }
+
+    void signUp() {
+        AuthenticationImpl authentication = new AuthenticationImpl();
+        String password = passwordTF.getText();
+        String userName = nameTF.getText();
+        String confirmPassword = confirmPasswordTF.getText();
+        Validation validation = authentication.signUp(new User(userName, password), confirmPassword);
+
+        if (validation.isValid()) {
+            try {
+                Validation serverChecker = authentication.serverCheck(outStream,
+                        dataInputStream, new User(userName, password),
+                        Constants.REGISTER).get();
+                if (serverChecker.isValid()) {
+                    stage.setScene(playOn.getScene());
+                }
+                System.out.println(serverChecker.getMessage());
+
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println(validation.getMessage());
+        }
+    }
+
+    private void init() {
+        new Scene(this);
+        signUpBtn.setOnAction(this);
+        alreadyHaveAccBtn.setOnAction(this);
+        playOfflineBtn.setOnAction(this);
+    }
+
+    @Override
+    public void handle(ActionEvent event) {
+        if (event.getSource() == signUpBtn) {
+            playOn = new PlayOnline(stage);
+            signUp();
+        } else if (event.getSource() == alreadyHaveAccBtn) {
+            stage.setScene( new Login(stage, outStream, dataInputStream).getScene());
+        } else if (event.getSource() == playOfflineBtn) {
+            stage.setScene(new PlayOffline(stage).getScene());
+        }
+    }
+
 }

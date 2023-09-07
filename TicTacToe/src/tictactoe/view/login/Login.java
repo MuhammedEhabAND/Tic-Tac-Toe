@@ -1,16 +1,30 @@
 package tictactoe.view.login;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import tictactoe.model.User;
+import tictactoe.presenter.Auth.AuthenticationImpl;
+import tictactoe.utils.Constants;
+import tictactoe.utils.Validation;
+import tictactoe.view.login.play_offline.PlayOffline;
+import tictactoe.view.play_online.PlayOnline;
+import tictactoe.view.register.Register;
 
-public class Login extends BorderPane {
+import java.io.DataInputStream;
+import java.io.PrintStream;
+import java.util.concurrent.ExecutionException;
+import javafx.scene.image.Image;
 
+public class Login extends BorderPane implements EventHandler<ActionEvent> {
     protected final AnchorPane anchorPane;
     protected final Label label;
     protected final Label label0;
@@ -25,65 +39,65 @@ public class Login extends BorderPane {
     protected final Button loginBtn;
     protected final Button registerBtn;
 
-    public AnchorPane getAnchorPane() {
-        return anchorPane;
-    }
-
-    public Label getLabel() {
-        return label;
-    }
-
-    public Label getLabel0() {
-        return label0;
-    }
-
-    public Label getLabel1() {
-        return label1;
-    }
-
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public AnchorPane getAnchorPane0() {
-        return anchorPane0;
-    }
-
-    public TextField getNameTextField() {
-        return nameTextField;
-    }
-
-    public TextField getPasswordTextField() {
-        return passwordTextField;
-    }
-
-    public Label getLabel2() {
-        return label2;
-    }
-
-    public Label getLabel3() {
-        return label3;
-    }
-
-    public Label getLabel4() {
-        return label4;
-    }
-
-    public Button getLoginBtn() {
-        return loginBtn;
-    }
-
-    public Button getRegisterBtn() {
-        return registerBtn;
-    }
-
-    public Button getPlayOfflineBtn() {
-        return playOfflineBtn;
-    }
+    private final Stage stage;
+    private PlayOnline playOn;
     protected final Button playOfflineBtn;
+    DataInputStream dataInputStream;
+    PrintStream outStream;
 
-    public Login() {
 
+    private void init() {
+        stage.setScene(new Scene(this));
+        loginBtn.setOnAction(this);
+        registerBtn.setOnAction(this);
+        playOfflineBtn.setOnAction(this);
+    }
+
+    @Override
+    public void handle(ActionEvent event) {
+        if (event.getSource() == loginBtn) {
+            playOn = new PlayOnline(stage);
+            signIn();
+        }
+
+        else if  (event.getSource() == registerBtn) {
+             stage.setScene(new Register(stage,outStream,dataInputStream).getScene());
+        }
+
+        else if (event.getSource() == playOfflineBtn) {
+            stage.setScene( new PlayOffline(stage).getScene());
+        }
+    }
+
+    void signIn() {
+        AuthenticationImpl authentication = new AuthenticationImpl();
+        String password = passwordTextField.getText();
+        String userName = nameTextField.getText();
+        Validation validation = authentication.login(new User(userName, password));
+
+        if (validation.isValid()) {
+            try {
+                Validation serverChecker = authentication.serverCheck(outStream,
+                        dataInputStream, new User(userName, password),
+                        Constants.LOGIN).get();
+                if ( serverChecker.isValid()){
+                    stage.setScene(playOn.getScene());
+                }
+                System.out.println(serverChecker.getMessage());
+
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println(validation.getMessage());
+        }
+    }
+
+
+    public Login(Stage stage, PrintStream outStream, DataInputStream dataInputStream) {
+        this.stage = stage;
+        this.outStream = outStream;
+        this.dataInputStream = dataInputStream;
         anchorPane = new AnchorPane();
         label = new Label();
         label0 = new Label();
@@ -194,7 +208,7 @@ public class Login extends BorderPane {
         loginBtn.setLayoutX(15.0);
         loginBtn.setLayoutY(295.0);
         loginBtn.setMnemonicParsing(false);
-        
+
         loginBtn.setPrefHeight(55.0);
         loginBtn.setPrefWidth(416.0);
         loginBtn.setStyle("-fx-background-color: #1978ae;");
@@ -235,7 +249,7 @@ public class Login extends BorderPane {
         anchorPane0.getChildren().add(loginBtn);
         anchorPane0.getChildren().add(registerBtn);
         anchorPane0.getChildren().add(playOfflineBtn);
-
+        init();
     }
 
 
