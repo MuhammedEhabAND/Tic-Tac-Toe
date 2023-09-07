@@ -68,6 +68,8 @@ public class GameBoard extends AnchorPane {
     GameType gameType;
     Image xImage;
     Image oImage;
+    int userScoreInt = 0;
+    int cpuScoreInt = 0;
     
     public GameBoard(GameType gameType) {
 
@@ -297,17 +299,17 @@ public class GameBoard extends AnchorPane {
         userScore.setLayoutY(69.0);
         userScore.setPrefHeight(47.0);
         userScore.setPrefWidth(49.0);
-        userScore.setText("0");
+        userScore.setText(String.valueOf(userScoreInt));
         userScore.setTextFill(javafx.scene.paint.Color.WHITE);
-        userScore.setFont(new Font("SansSerif Bold Italic", 30.0));
+        userScore.setFont(new Font("SansSerif Bold Italic", 20.0));
 
         cpuScore.setLayoutX(496.0);
         cpuScore.setLayoutY(69.0);
         cpuScore.setPrefHeight(47.0);
         cpuScore.setPrefWidth(39.0);
-        cpuScore.setText("0");
+        cpuScore.setText(String.valueOf(cpuScoreInt));
         cpuScore.setTextFill(javafx.scene.paint.Color.WHITE);
-        cpuScore.setFont(new Font("SansSerif Bold Italic", 30.0));
+        cpuScore.setFont(new Font("SansSerif Bold Italic", 20.0));
 
         label1.setLayoutX(281.0);
         label1.setLayoutY(14.0);
@@ -355,12 +357,9 @@ public class GameBoard extends AnchorPane {
     boolean isGameOn = true;
     
     protected void onTap(MouseEvent mouseEvent, int x, int y){
-        label.setText(player1.getUserName());
-        label0.setText(player2.getUserName());
         
-        ImageView imageClicked = (ImageView) mouseEvent.getSource();
-    
         if(isGameOn){
+            ImageView imageClicked = (ImageView) mouseEvent.getSource();
             if(imageClicked.getImage() == null) {
                 Move move = new Move(symbol, y, x);
                 addMove(imageClicked);
@@ -438,39 +437,59 @@ public class GameBoard extends AnchorPane {
                 } else {
                     // Lose
                     System.out.println("You losed");
+
+                    if (winner.equals(player1.getUserName())) {
+                        // Win
+                        userScoreInt += 5;
+                        userScore.setText(String.valueOf(userScoreInt));
+        
+                        System.out.println("You win");
+                    } else {
+                        // Lose
+                        cpuScoreInt +=5;
+                        cpuScore.setText(String.valueOf(userScoreInt));
+        
+                        System.out.println("You losed");
+                        }
+                    }
                 }
             }
         }
-    }
 
     private void showPopUp(String winner) {
         ResultPopUpDialog result = new ResultPopUpDialog();
-        
-        Stage dialogStage = new Stage(StageStyle.UTILITY);
+          
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.UNDECORATED);
         dialogStage.initModality(Modality.WINDOW_MODAL);
         System.out.println("Winner: " + winner);
         if(winner.equals("draw")){
             result.getWinnerLabel().setText(winner);
         } else {
-            result.getWinnerLabel().setText("The Winner is : " + winner);
+            System.out.println(winner);
+        
+            if(winner.equals("draw")){
+                result.getWinnerLabel().setText("DRAW");
+            } else {
+            
+                result.getWinnerLabel().setText("The Winner is : " + winner);
+            }
+            result.getRestartBtn().setOnAction((event) -> {
+                reset();
+                dialogStage.close();
+            });
+        
+            Scene scene = new Scene(result);
+        
+            dialogStage.setScene(scene);
+        
+            dialogStage.showAndWait();
         }
-        result.getRestartBtn().setOnAction((event) -> {
-            reset();
-            dialogStage.close();
-        });
-        
-        Scene scene = new Scene(result);
-        
-        dialogStage.setScene(scene);
-        
-        dialogStage.showAndWait();
     }
 
     private void reset() {
         game.printBoard();
         System.out.println("=========================");
-        
-        
         
         game = new Game(player1 , player2);
         symbol =Symbol.X;

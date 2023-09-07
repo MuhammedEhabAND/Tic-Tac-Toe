@@ -33,6 +33,7 @@ public class Game {
     }
     
     public String makeMove(Move move) {
+        System.out.println("MOVE: " + move.getSymbol() + move.getRaw() + move.getColumn());
         Player player = userChoices.poll();
         board.addMove();
         doChanges(move, player);
