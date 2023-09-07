@@ -1,10 +1,12 @@
 package tictactoe.view.login.play_offline;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class PlayOffline extends AnchorPane {
 
@@ -39,9 +41,10 @@ public class PlayOffline extends AnchorPane {
     protected final Button easyBtn;
     protected final Button mediumBtn;
     protected final Button hardBtn;
-
-    public PlayOffline() {
-
+    private  Stage stage;
+    public PlayOffline(Stage stage) {
+        new Scene(this);
+        this.stage=stage;
         label = new Label();
         twoPlayerBtn = new Button();
         label0 = new Label();
