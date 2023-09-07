@@ -1,7 +1,6 @@
 package tictactoe.view.game_board;
 
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -26,7 +25,7 @@ import tictactoe.model.Result;
 import tictactoe.model.Symbol;
 import tictactoe.view.result_popup.ResultPopUpDialog;
 
-public class GameBoard extends AnchorPane implements EventHandler<Event> {
+public class GameBoard extends AnchorPane {
 
     protected final Rectangle rectangle;
     protected final GridPane gridPane;
@@ -67,19 +66,15 @@ public class GameBoard extends AnchorPane implements EventHandler<Event> {
     Image oImage;
     int userScoreInt = 0;
     int cpuScoreInt = 0;
-    Stage stage ;
-    public void init(){
-          stage.setScene(new Scene(this));
-    }
-    public GameBoard(Stage stage) {
-        this.stage = stage; 
+    public GameBoard() {
+
         player1 = new Player("Guest-X", Symbol.X);
         player2 = new Player("Guest-O", Symbol.O);
         symbol = player1.getSymbol();
 
 
         game = new Game(player1, player2);
-        
+
         rectangle = new Rectangle();
         gridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -348,9 +343,9 @@ public class GameBoard extends AnchorPane implements EventHandler<Event> {
         getChildren().add(userScore);
         getChildren().add(cpuScore);
         getChildren().add(label1);
-      xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
-       oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
-        init();
+        xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
+        oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
+        
 
     }
     
@@ -461,9 +456,4 @@ public class GameBoard extends AnchorPane implements EventHandler<Event> {
         imageView6.setFitWidth(117.0);
         imageView7.setFitWidth(117.0);
      }
-
-    @Override
-    public void handle(Event event) {
-    
-    }
 }
