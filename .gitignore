@@ -1,3 +1,8 @@
 /TicTacToe/build/
 /TicTacToe/dist/
 /TicTacToe/nbproject/private/
+*.html
+*.jar
+*.jnlp
+*.properties
+*.class
