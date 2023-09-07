@@ -1,28 +1,33 @@
 package tictactoe.view.register;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import tictactoe.model.User;
-import tictactoe.presenter.Auth.AuthenticationImpl;
+
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
 import tictactoe.view.login.Login;
-import tictactoe.view.login.play_offline.PlayOffline;
+import tictactoe.view.play_offline.PlayOffline;
 import tictactoe.view.play_online.PlayOnline;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
-import java.util.concurrent.ExecutionException;
+import tictactoe.presenter.auth.server.NetworkListener;
+import tictactoe.presenter.auth.server.NetworkResponse;
+import tictactoe.presenter.auth.validation.AuthInputValidator;
+import tictactoe.presenter.auth.validation.AuthInputValidatorImpl;
+import tictactoe.presenter.auth.validation.Authentication;
+import tictactoe.presenter.auth.validation.AuthenticationImpl;
 
 public class Register extends BorderPane implements EventHandler<ActionEvent> {
 
@@ -204,7 +209,7 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
-          imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
+        //   imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setRight(anchorPane0);
 
         anchorPane.getChildren().add(nameTF);
@@ -226,25 +231,35 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
     }
 
     void signUp() {
-        AuthenticationImpl authentication = new AuthenticationImpl();
+        AuthInputValidator authInputValidator = new AuthInputValidatorImpl();
+        Authentication authentication = new AuthenticationImpl(authInputValidator);
         String password = passwordTF.getText();
         String userName = nameTF.getText();
         String confirmPassword = confirmPasswordTF.getText();
         Validation validation = authentication.signUp(new User(userName, password), confirmPassword);
-
         if (validation.isValid()) {
-            try {
-                Validation serverChecker = authentication.serverCheck(outStream,
-                        dataInputStream, new User(userName, password),
-                        Constants.REGISTER).get();
-                if (serverChecker.isValid()) {
-                    stage.setScene(playOn.getScene());
-                }
-                System.out.println(serverChecker.getMessage());
+            new Thread(
+                    new NetworkListener(
+                            dataInputStream,
+                            new User(userName, password),
+                            Constants.REGISTER,
+                            outStream,
+                            new NetworkResponse() {
+                                @Override
+                                public void onSuccess(Validation validation) {
+                                    Platform.runLater(() -> {
+                                        stage.setScene(new PlayOnline(stage).getScene());
+                                    });
+                                }
 
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
+                                @Override
+                                public void onError(String errorMessage) {
+                                }
+                            }
+                    )
+            ) .start();
+
+
         } else {
             System.out.println(validation.getMessage());
         }

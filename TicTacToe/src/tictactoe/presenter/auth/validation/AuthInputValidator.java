@@ -1,4 +1,4 @@
-package tictactoe.presenter.Auth;
+package tictactoe.presenter.auth.validation;
 
 public interface AuthInputValidator {
     Boolean passwordValidator(String password);

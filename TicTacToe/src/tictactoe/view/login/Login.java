@@ -1,5 +1,6 @@
 package tictactoe.view.login;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -12,17 +13,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import tictactoe.model.User;
-import tictactoe.presenter.Auth.AuthenticationImpl;
+
+
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
-import tictactoe.view.login.play_offline.PlayOffline;
+import tictactoe.view.play_offline.PlayOffline;
 import tictactoe.view.play_online.PlayOnline;
 import tictactoe.view.register.Register;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
-import java.util.concurrent.ExecutionException;
-import javafx.scene.image.Image;
+import tictactoe.presenter.auth.server.NetworkListener;
+import tictactoe.presenter.auth.server.NetworkResponse;
+import tictactoe.presenter.auth.validation.AuthInputValidator;
+import tictactoe.presenter.auth.validation.AuthInputValidatorImpl;
+import tictactoe.presenter.auth.validation.Authentication;
+import tictactoe.presenter.auth.validation.AuthenticationImpl;
 
 public class Login extends BorderPane implements EventHandler<ActionEvent> {
     protected final AnchorPane anchorPane;
@@ -58,39 +64,48 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         if (event.getSource() == loginBtn) {
             playOn = new PlayOnline(stage);
             signIn();
-        }
-
-        else if  (event.getSource() == registerBtn) {
-             stage.setScene(new Register(stage,outStream,dataInputStream).getScene());
-        }
-
-        else if (event.getSource() == playOfflineBtn) {
-            stage.setScene( new PlayOffline(stage).getScene());
+        } else if (event.getSource() == registerBtn) {
+            stage.setScene(new Register(stage, outStream, dataInputStream).getScene());
+        } else if (event.getSource() == playOfflineBtn) {
+            stage.setScene(new PlayOffline(stage).getScene());
         }
     }
 
     void signIn() {
-        AuthenticationImpl authentication = new AuthenticationImpl();
         String password = passwordTextField.getText();
         String userName = nameTextField.getText();
+        AuthInputValidator authInputValidator = new AuthInputValidatorImpl();
+        Authentication authentication = new AuthenticationImpl(authInputValidator);
         Validation validation = authentication.login(new User(userName, password));
-
         if (validation.isValid()) {
-            try {
-                Validation serverChecker = authentication.serverCheck(outStream,
-                        dataInputStream, new User(userName, password),
-                        Constants.LOGIN).get();
-                if ( serverChecker.isValid()){
-                    stage.setScene(playOn.getScene());
-                }
-                System.out.println(serverChecker.getMessage());
+            new Thread(
+                    new NetworkListener(
+                            dataInputStream,
+                            new User(userName, password),
+                            Constants.LOGIN,
+                            outStream,
+                            new NetworkResponse() {
+                                @Override
+                                public void onSuccess(Validation validation) {
+                                    Platform.runLater(() ->
+                                            stage.setScene(new PlayOnline(stage).getScene()));
+                                }
 
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
+                                @Override
+                                public void onError(String errorMessage) {
+                                    System.out.println(errorMessage);
+
+                                }
+                            }
+                    )
+            ) .start();
+        }else {
             System.out.println(validation.getMessage());
         }
+
+
+
+
     }
 
 
@@ -162,7 +177,6 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
-        imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setLeft(anchorPane);
 
         BorderPane.setAlignment(anchorPane0, javafx.geometry.Pos.CENTER);
