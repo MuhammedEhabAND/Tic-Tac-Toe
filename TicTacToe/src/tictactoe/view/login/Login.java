@@ -22,6 +22,7 @@ import tictactoe.view.register.Register;
 import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.util.concurrent.ExecutionException;
+import javafx.scene.image.Image;
 
 public class Login extends BorderPane implements EventHandler<ActionEvent> {
     protected final AnchorPane anchorPane;
@@ -161,6 +162,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
+        imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setLeft(anchorPane);
 
         BorderPane.setAlignment(anchorPane0, javafx.geometry.Pos.CENTER);

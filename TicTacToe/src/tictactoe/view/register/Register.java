@@ -204,7 +204,7 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
         imageView.setFitWidth(202.0);
         imageView.setLayoutX(24.0);
         imageView.setLayoutY(91.0);
-        //   imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
+          imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
         setRight(anchorPane0);
 
         anchorPane.getChildren().add(nameTF);
