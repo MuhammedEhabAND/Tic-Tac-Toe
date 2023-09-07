@@ -365,10 +365,13 @@ public class GameBoard extends AnchorPane {
                 addMove(imageClicked);
                 String winner = game.makeMove(move);
                 System.out.println("guest move" + move.getRaw() + ", " + move.getColumn());
-                checkWinner(winner);
+                if(checkWinner(winner)){
+                    
+                }else{
                 
                 if ((gameType == GameType.EASY || gameType == GameType.MEDIUM || gameType == GameType.HARD) && isGameOn) {
                     playCpu();
+                    }
                 }
             }
         }
@@ -399,7 +402,7 @@ public class GameBoard extends AnchorPane {
                 if (col == 1) imageClicked = imageView6;
                 if (col == 2) imageClicked = imageView7;
         }
-                
+        
         addMove(imageClicked);
         String winner = game.makeMove(new Move(Symbol.O, col, row));
         checkWinner(winner);
@@ -423,37 +426,25 @@ public class GameBoard extends AnchorPane {
         }
     }
     
-    private void checkWinner(String winner) {
+    private boolean checkWinner(String winner) {
         if (winner != null) {
+            
             isGameOn = false;
             showPopUp(winner);
+            
             if (winner.equals("draw")) {
                 // Draw
                 System.out.println("Game is draw");
-            } else {
-                if (winner.equals(player1.getUserName())) {
-                    // Win
-                    System.out.println("You win");
-                } else {
-                    // Lose
-                    System.out.println("You losed");
-
-                    if (winner.equals(player1.getUserName())) {
-                        // Win
-                        userScoreInt += 5;
-                        userScore.setText(String.valueOf(userScoreInt));
-        
-                        System.out.println("You win");
-                    } else {
-                        // Lose
-                        cpuScoreInt +=5;
-                        cpuScore.setText(String.valueOf(userScoreInt));
-        
-                        System.out.println("You losed");
-                        }
+            } else if(winner.equals(player1.getUserName())) {
+                
+                System.out.println("YOU wins");
+                }else{
+                    System.out.println("CPU wins");
+                    
                     }
-                }
+            return true;
             }
+        return false;
         }
 
     private void showPopUp(String winner) {
@@ -465,15 +456,13 @@ public class GameBoard extends AnchorPane {
         System.out.println("Winner: " + winner);
         if(winner.equals("draw")){
             result.getWinnerLabel().setText(winner);
-        } else {
-            System.out.println(winner);
-        
-            if(winner.equals("draw")){
-                result.getWinnerLabel().setText("DRAW");
-            } else {
-            
-                result.getWinnerLabel().setText("The Winner is : " + winner);
-            }
+        } else if(winner.equals(player1.getUserName())){
+            System.out.println("You wins");
+             result.getWinnerLabel().setText(winner);
+        }else{
+            System.out.println("CPU wins");
+         result.getWinnerLabel().setText(winner);
+        }
             result.getRestartBtn().setOnAction((event) -> {
                 reset();
                 dialogStage.close();
@@ -484,7 +473,7 @@ public class GameBoard extends AnchorPane {
             dialogStage.setScene(scene);
         
             dialogStage.showAndWait();
-        }
+        
     }
 
     private void reset() {
