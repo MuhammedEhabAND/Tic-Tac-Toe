@@ -39,10 +39,12 @@ public class TicTacToe extends Application {
             mySocket = new  Socket(Constants.HOST, Constants.PORT);
             dis = new DataInputStream(mySocket.getInputStream());
             ps = new PrintStream(mySocket.getOutputStream());
-           new Login(stage,ps,dis);
-           new Register(stage, ps, dis);
         } catch (IOException ex) {
             ex.printStackTrace();
+        }finally{
+           new Login(stage,ps,dis);
+           new Register(stage, ps, dis);
+            
         }
 
     }
