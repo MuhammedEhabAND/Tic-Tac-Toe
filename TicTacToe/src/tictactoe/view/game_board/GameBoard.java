@@ -299,7 +299,7 @@ public class GameBoard extends AnchorPane {
         userScore.setLayoutY(69.0);
         userScore.setPrefHeight(47.0);
         userScore.setPrefWidth(49.0);
-        userScore.setText(String.valueOf(userScoreInt));
+        userScore.setText("0");
         userScore.setTextFill(javafx.scene.paint.Color.WHITE);
         userScore.setFont(new Font("SansSerif Bold Italic", 20.0));
 
@@ -307,7 +307,7 @@ public class GameBoard extends AnchorPane {
         cpuScore.setLayoutY(69.0);
         cpuScore.setPrefHeight(47.0);
         cpuScore.setPrefWidth(39.0);
-        cpuScore.setText(String.valueOf(cpuScoreInt));
+        cpuScore.setText("0");
         cpuScore.setTextFill(javafx.scene.paint.Color.WHITE);
         cpuScore.setFont(new Font("SansSerif Bold Italic", 20.0));
 
@@ -366,9 +366,8 @@ public class GameBoard extends AnchorPane {
                 String winner = game.makeMove(move);
                 System.out.println("guest move" + move.getRaw() + ", " + move.getColumn());
                 if(checkWinner(winner)){
-                    
                 }else{
-                
+                    
                 if ((gameType == GameType.EASY || gameType == GameType.MEDIUM || gameType == GameType.HARD) && isGameOn) {
                     playCpu();
                     }
@@ -433,14 +432,14 @@ public class GameBoard extends AnchorPane {
             showPopUp(winner);
             
             if (winner.equals("draw")) {
-                // Draw
-                System.out.println("Game is draw");
             } else if(winner.equals(player1.getUserName())) {
-                
-                System.out.println("YOU wins");
+                    userScoreInt += 5;
+                    userScore.setText(String.valueOf(userScoreInt));
+      
                 }else{
-                    System.out.println("CPU wins");
-                    
+                    cpuScoreInt += 5;   
+                    cpuScore.setText(String.valueOf(cpuScoreInt));
+        
                     }
             return true;
             }
@@ -455,7 +454,7 @@ public class GameBoard extends AnchorPane {
         dialogStage.initModality(Modality.WINDOW_MODAL);
         System.out.println("Winner: " + winner);
         if(winner.equals("draw")){
-            result.getWinnerLabel().setText(winner);
+            result.getWinnerLabel().setText("TIE !!");
         } else if(winner.equals(player1.getUserName())){
             System.out.println("You wins");
              result.getWinnerLabel().setText(winner);
