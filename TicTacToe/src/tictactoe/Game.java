@@ -39,8 +39,10 @@ public class Game {
         doChanges(move, player);
         Result result = board.getSituation();
         if (result == Result.DRAW) {
+            System.out.println("============================DRAW");
             return "draw";
         } else if(result != null && result != Result.ONGOING) {
+            System.out.println("============================WINNER WINNER WINNER WINNER: " + player.getUserName());
             return player.getUserName();
         } 
         return null;

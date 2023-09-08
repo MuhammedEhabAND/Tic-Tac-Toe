@@ -121,7 +121,7 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
 
         playOn = new PlayOnline();
 
-        game = new GameBoard(GameType.TWO_PLAYERS);
+        game = new GameBoard(GameType.EASY);
         easyGame = new GameBoard(GameType.EASY);
         mediumGame = new GameBoard(GameType.MEDIUM);
         hardGame = new GameBoard(GameType.HARD);

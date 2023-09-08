@@ -381,6 +381,7 @@ public class GameBoard extends AnchorPane {
         ImageView imageClicked = null;
         symbol = Symbol.O;
         int[] bestMove = miniMax.minimax(game.getBoard(), symbol);
+        System.out.println("/////////////// " + bestMove[0] + bestMove[1]);
                 
         int row = bestMove[0], col = bestMove[1];
         switch (row) {
