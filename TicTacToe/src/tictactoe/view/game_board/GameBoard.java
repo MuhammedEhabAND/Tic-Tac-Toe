@@ -76,7 +76,7 @@ public class GameBoard extends AnchorPane {
 
 
         game = new Game(player1, player2);
-        miniMax = new MiniMax();
+        miniMax = new MiniMax(gameType);
 
         rectangle = new Rectangle();
         gridPane = new GridPane();
