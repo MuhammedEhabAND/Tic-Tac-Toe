@@ -1,5 +1,6 @@
 package tictactoe;
 
+import java.util.Random;
 import tictactoe.model.Symbol;
 
 public class MiniMax {
@@ -12,6 +13,8 @@ public class MiniMax {
     
     public int[] minimax(Symbol[][] symbols, Symbol symbol) {
         int[] bestMove = new int[] { -1, -1 };
+        if (gameType == GameType.MEDIUM) return getMediumMove(symbols);
+        
         int bestScore = (gameType == GameType.EASY) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
 
         for (int row = 0; row < 3; row++) {
@@ -30,6 +33,23 @@ public class MiniMax {
             }
         }
 
+        return bestMove;
+    }
+    
+    private int[] getMediumMove(Symbol[][] symbols) {
+        int[] bestMove = new int[] { -1, -1 };
+        Random random = new Random();
+        
+        while(true) {
+            int row = random.nextInt(3);
+            int col = random.nextInt(3);
+            if (symbols[row][col] == Symbol.UNDEFINED) {
+                bestMove[0] = row;
+                bestMove[1] = col;
+                break;
+            }
+        }
+        
         return bestMove;
     }
 
