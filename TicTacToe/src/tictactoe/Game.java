@@ -9,10 +9,10 @@ import tictactoe.model.Symbol;
 
 public class Game {
     
-    private Board board;
-    private Player player1;
-    private Player player2;
-    private Queue<Player> userChoices  = new LinkedList<>();
+    private final Board board;
+    private final Player player1;
+    private final Player player2;
+    private final Queue<Player> userChoices  = new LinkedList<>();
     
     public Game(Player player1, Player player2) {
         this.player1 = player1;
@@ -33,16 +33,13 @@ public class Game {
     }
     
     public String makeMove(Move move) {
-        System.out.println("MOVE: " + move.getSymbol() + move.getRaw() + move.getColumn());
         Player player = userChoices.poll();
         board.addMove();
         doChanges(move, player);
         Result result = board.getSituation();
         if (result == Result.DRAW) {
-            System.out.println("============================DRAW");
             return "draw";
         } else if(result != null && result != Result.ONGOING) {
-            System.out.println("============================WINNER WINNER WINNER WINNER: " + player.getUserName());
             return player.getUserName();
         } 
         return null;
@@ -135,9 +132,5 @@ public class Game {
                     board.setSituation(Result.WIN);
                 }
             }
-    }
-    
-    public void printBoard() {
-        board.printBoard();
     }
 }

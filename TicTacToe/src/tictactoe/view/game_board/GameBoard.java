@@ -1,7 +1,5 @@
 package tictactoe.view.game_board;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -12,7 +10,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -23,7 +20,6 @@ import tictactoe.GameType;
 import tictactoe.MiniMax;
 import tictactoe.model.Move;
 import tictactoe.model.Player;
-import tictactoe.model.Result;
 import tictactoe.model.Symbol;
 import tictactoe.view.result_popup.ResultPopUpDialog;
 
@@ -364,24 +360,22 @@ public class GameBoard extends AnchorPane {
                 Move move = new Move(symbol, y, x);
                 addMove(imageClicked);
                 String winner = game.makeMove(move);
-                System.out.println("guest move" + move.getRaw() + ", " + move.getColumn());
-                checkWinner(winner);
+                if(checkWinner(winner)){
+                    
+                } else {
                 
                 if ((gameType == GameType.EASY || gameType == GameType.MEDIUM || gameType == GameType.HARD) && isGameOn) {
                     playCpu();
+                    }
                 }
             }
         }
-        
-        game.printBoard();
-        System.out.println("=========================");
     }
     
     private void playCpu() {
         ImageView imageClicked = null;
         symbol = Symbol.O;
         int[] bestMove = miniMax.minimax(game.getBoard(), symbol);
-        System.out.println("/////////////// " + bestMove[0] + bestMove[1]);
                 
         int row = bestMove[0], col = bestMove[1];
         switch (row) {
@@ -400,11 +394,10 @@ public class GameBoard extends AnchorPane {
                 if (col == 1) imageClicked = imageView6;
                 if (col == 2) imageClicked = imageView7;
         }
-                
+        
         addMove(imageClicked);
         String winner = game.makeMove(new Move(Symbol.O, col, row));
         checkWinner(winner);
-        System.out.println("cpu move: " + row + ", " + col);
     }
     
     private void addMove(ImageView imageClicked) {
@@ -418,33 +411,30 @@ public class GameBoard extends AnchorPane {
                     imageClicked.setImage(oImage);
                     imageClicked.setFitWidth(60);        
                     symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
-            
                 }
             }
         }
     }
-    
-    private void checkWinner(String winner) {
+
+    private boolean checkWinner(String winner) {
         if (winner != null) {
             isGameOn = false;
             showPopUp(winner);
+            
             if (winner.equals("draw")) {
                 // Draw
-                System.out.println("Game is draw");
+            } else if(winner.equals(player1.getUserName())) {
+                // Win
+                userScoreInt += 5;
+                userScore.setText(String.valueOf(userScoreInt));
             } else {
-                if (winner.equals(player1.getUserName())) {
-                    // Win
-                    userScoreInt += 5;
-                    userScore.setText(String.valueOf(userScoreInt));
-                    System.out.println("You win");
-                } else {
-                    // Lose
-                    cpuScoreInt +=5;
-                    cpuScore.setText(String.valueOf(userScoreInt));
-                    System.out.println("You losed");
-                }
+                // Lose
+                cpuScoreInt +=5;
+                cpuScore.setText(String.valueOf(userScoreInt));
             }
+            return true;
         }
+        return false;
     }
 
     private void showPopUp(String winner) {
@@ -455,9 +445,11 @@ public class GameBoard extends AnchorPane {
         dialogStage.initModality(Modality.WINDOW_MODAL);
         
         if(winner.equals("draw")){
-            result.getWinnerLabel().setText("DRAW");
-        }else{
-            result.getWinnerLabel().setText("The Winner is : " + winner);
+            result.getWinnerLabel().setText(winner);
+        } else if(winner.equals(player1.getUserName())){
+            result.getWinnerLabel().setText(winner);
+        } else {
+            result.getWinnerLabel().setText(winner);
         }
         result.getRestartBtn().setOnAction((event) -> {
             reset();
@@ -465,17 +457,11 @@ public class GameBoard extends AnchorPane {
         });
         
         Scene scene = new Scene(result);
-        
         dialogStage.setScene(scene);
-        
         dialogStage.showAndWait();
-        
     }
 
     private void reset() {
-        game.printBoard();
-        System.out.println("=========================");
-        
         game = new Game(player1 , player2);
         symbol =Symbol.X;
         resetImages();

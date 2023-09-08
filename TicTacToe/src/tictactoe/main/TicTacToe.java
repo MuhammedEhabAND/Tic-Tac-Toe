@@ -40,12 +40,11 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
     private GameBoard hardGame;
     private PlayOnline playOn;
     private Scene loginScene; // Store the Scene for the login screen
-    private Scene registerScene; // Store the Scene for the login screen
-    private Scene playOffScene; // Store the Scene for the login screen
-    private Scene gameScene; // Store the Scene for the login screen
+    private Scene registerScene;
+    private Scene playOffScene;
+    private Scene gameScene;
 
-
-    private Scene playOnScene; // Store the Scene for the login screen
+    private Scene playOnScene;
     
     Socket mySocket;
     DataInputStream dis;
@@ -118,7 +117,6 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         register = new Register();
         playOff = new PlayOffline();
 
-
         playOn = new PlayOnline();
 
         game = new GameBoard(GameType.EASY);
@@ -131,7 +129,7 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         login.getPlayOfflineBtn().setOnAction(this);
 
 
-       register.getSignUpBtn().setOnAction(this);
+        register.getSignUpBtn().setOnAction(this);
 
         register.getAlreadyHaveAccBtn().setOnAction(this);
         register.getPlayOfflineBtn().setOnAction(this);
@@ -139,10 +137,10 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         
         stage.setResizable(false);
         loginScene = new Scene(login); // Create the Scene for the login screen
-        registerScene = new Scene(register); // Create the Scene for the login screen
+        registerScene = new Scene(register);
 
-        playOffScene = new Scene(playOff); // Create the Scene for the login screen
-        playOnScene = new Scene(playOn); // Create the Scene for the login screen
+        playOffScene = new Scene(playOff);
+        playOnScene = new Scene(playOn);
 
         stage.setScene(loginScene); // Set the initial scene
         stage.show();
@@ -167,7 +165,6 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
             stage.setScene(gameScene);
         }
         if (event.getSource() == login.getRegisterBtn()) {
-            System.out.print("clicked");
             stage.setScene(registerScene);
         }
         if (event.getSource() == login.getPlayOfflineBtn() || event.getSource() == register.getPlayOfflineBtn()) {
@@ -180,7 +177,6 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         if (event.getSource() == register.getSignUpBtn() || event.getSource() == login.getLoginBtn()) {
             stage.setScene(playOnScene); // Set the login screen Scene again
         }
-
     }
 
     public static void main(String[] args) {
