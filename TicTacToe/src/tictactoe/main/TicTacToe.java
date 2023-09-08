@@ -28,15 +28,27 @@ public class TicTacToe extends Application {
         stage.show();
         try {
             mySocket = new  Socket(Constants.HOST, Constants.PORT);
+<<<<<<< HEAD
             dataInputStream = new DataInputStream(mySocket.getInputStream());
             printStream = new PrintStream(mySocket.getOutputStream());
 
+=======
+            dis = new DataInputStream(mySocket.getInputStream());
+            ps = new PrintStream(mySocket.getOutputStream());
+>>>>>>> origin/feature/authentication
         } catch (IOException ex) {
             ex.printStackTrace();
+<<<<<<< HEAD
             System.out.println("Error");
         }finally {
             new Login(stage, printStream, dataInputStream);
             new Register(stage, printStream, dataInputStream);
+=======
+        }finally{
+           new Login(stage,ps,dis);
+           new Register(stage, ps, dis);
+            
+>>>>>>> origin/feature/authentication
         }
     }
 
