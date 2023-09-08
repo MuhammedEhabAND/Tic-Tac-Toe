@@ -430,7 +430,7 @@ public class GameBoard extends AnchorPane {
             } else {
                 // Lose
                 cpuScoreInt +=5;
-                cpuScore.setText(String.valueOf(userScoreInt));
+                cpuScore.setText(String.valueOf(cpuScoreInt));
             }
             return true;
         }
