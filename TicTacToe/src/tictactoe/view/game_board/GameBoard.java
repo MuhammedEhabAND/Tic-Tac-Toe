@@ -1,5 +1,10 @@
 package tictactoe.view.game_board;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -15,11 +20,13 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import tictactoe.Files;
 import tictactoe.Game;
 import tictactoe.GameType;
 import tictactoe.MiniMax;
 import tictactoe.model.Move;
 import tictactoe.model.Player;
+import tictactoe.model.Record;
 import tictactoe.model.Symbol;
 import tictactoe.view.result_popup.ResultPopUpDialog;
 
@@ -66,6 +73,9 @@ public class GameBoard extends AnchorPane {
     Image oImage;
     int userScoreInt = 0;
     int cpuScoreInt = 0;
+    Files files;
+    Boolean isRecording;
+    Record record;
     
     public GameBoard(GameType gameType) {
 
@@ -73,10 +83,11 @@ public class GameBoard extends AnchorPane {
         player2 = new Player("Guest-O", Symbol.O);
         symbol = player1.getSymbol();
         this.gameType = gameType;
-
+        isRecording = false;
 
         game = new Game(player1, player2);
         miniMax = new MiniMax(gameType);
+        files = new Files();
 
         rectangle = new Rectangle();
         gridPane = new GridPane();
@@ -348,6 +359,65 @@ public class GameBoard extends AnchorPane {
         getChildren().add(label1);
         xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
         oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
+        
+        // Get Game Recorded Button
+        userScore.setOnMouseClicked((MouseEvent event) -> {
+            try {
+                Record record = files.openFile();
+                playRecorded(record);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        // Record Dialog Button
+        cpuScore.setOnMouseClicked((MouseEvent  event) -> {
+            isRecording = true;
+            record = new Record(player1, player2);
+        });
+    }
+    
+    private void playRecorded(Record record) {
+        reset();
+        isGameOn = true;
+        symbol = Symbol.X;
+        ImageView imageClicked = null;
+        
+        if (record != null) {
+            player1 = record.getPlayer1();
+            player2 = record.getPlayer2();
+            ArrayList<Move> moves = record.getMoves();
+            for (Move move: moves) {
+                int row = move.getRaw(), col = move.getColumn();
+                switch (row) {
+                    case 0:
+                        if (col == 0) imageClicked = imageView;
+                        if (col == 1) imageClicked = imageView0;
+                        if (col == 2) imageClicked = imageView1;
+                        break;
+                    case 1:
+                        if (col == 0) imageClicked = imageView2;
+                        if (col == 1) imageClicked = imageView3;
+                        if (col == 2) imageClicked = imageView4;
+                        break;
+                    case 2:
+                        if (col == 0) imageClicked = imageView5;
+                        if (col == 1) imageClicked = imageView6;
+                        if (col == 2) imageClicked = imageView7;
+                }
+                symbol = move.getSymbol();
+                
+                addMove(imageClicked);
+                String winner = game.makeMove(move);
+                checkWinner(winner);
+                
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
     
     boolean isGameOn = true;
@@ -358,6 +428,7 @@ public class GameBoard extends AnchorPane {
             ImageView imageClicked = (ImageView) mouseEvent.getSource();
             if(imageClicked.getImage() == null) {
                 Move move = new Move(symbol, y, x);
+                if (record != null) record.addMove(move);
                 addMove(imageClicked);
                 String winner = game.makeMove(move);
                 if(!checkWinner(winner)){
@@ -392,6 +463,9 @@ public class GameBoard extends AnchorPane {
                 if (col == 2) imageClicked = imageView7;
         }
         
+        Move move = new Move(symbol, col, row);
+        if (record != null) record.addMove(move);
+        
         addMove(imageClicked);
         String winner = game.makeMove(new Move(Symbol.O, col, row));
         checkWinner(winner);
@@ -417,6 +491,11 @@ public class GameBoard extends AnchorPane {
         if (winner != null) {
             isGameOn = false;
             showPopUp(winner);
+            
+            if (isRecording) {
+                isRecording = false;
+                files.saveFile(record);
+            }
             
             if (winner.equals("draw")) {
                 // Draw

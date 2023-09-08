@@ -1,6 +1,8 @@
 package tictactoe.model;
 
-public class Player extends UserData {
+import java.io.Serializable;
+
+public class Player extends UserData implements Serializable {
     public Player(String userName, Symbol symbol) {
         super(userName);
         this.symbol = symbol;
@@ -14,5 +16,10 @@ public class Player extends UserData {
 
     public void setSymbol(Symbol symbol) {
         this.symbol = symbol;
+    }
+    
+    @Override
+    public String toString() {
+        return new StringBuffer(this.UserName).toString();
     }
 }
