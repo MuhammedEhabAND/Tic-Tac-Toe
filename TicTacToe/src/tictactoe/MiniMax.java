@@ -26,7 +26,7 @@ public class MiniMax {
 //
 //        return bestMove;
         int[] bestMove = new int[] { -1, -1 };
-        int bestScore = Integer.MAX_VALUE;
+        int bestScore = Integer.MIN_VALUE;
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -35,7 +35,7 @@ public class MiniMax {
                     int score = minimaxHelper(symbols, 0, false);
                     symbols[row][col] = Symbol.UNDEFINED;
 
-                    if (symbol == Symbol.O && score < bestScore) {
+                    if (symbol == Symbol.O && score > bestScore) {
                         bestScore = score;
                         bestMove[0] = row;
                         bestMove[1] = col;

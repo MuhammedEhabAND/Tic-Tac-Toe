@@ -42,9 +42,11 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
     private Scene loginScene; // Store the Scene for the login screen
     private Scene registerScene; // Store the Scene for the login screen
     private Scene playOffScene; // Store the Scene for the login screen
-    private Scene gameScene; // Store the Scene for the login screen
-
-
+    private Scene twoPlayersGameScene; // Store the Scene for the login screen
+    private Scene easyGameScene;
+    private Scene mediumGameScene;
+    private Scene hardGameScene;
+    
     private Scene playOnScene; // Store the Scene for the login screen
     
     Socket mySocket;
@@ -116,12 +118,12 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         this.stage = stage;
         login = new Login();
         register = new Register();
-        playOff = new PlayOffline();
+        playOff = new PlayOffline(stage);
 
 
         playOn = new PlayOnline();
 
-        game = new GameBoard(GameType.EASY);
+        game = new GameBoard(GameType.TWO_PLAYERS);
         easyGame = new GameBoard(GameType.EASY);
         mediumGame = new GameBoard(GameType.MEDIUM);
         hardGame = new GameBoard(GameType.HARD);
@@ -150,22 +152,6 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
 
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() == playOff.getTwoPlayerBtn()) {
-            gameScene = new Scene(game);
-            stage.setScene(gameScene);
-        }
-        if (event.getSource() == playOff.getEasyBtn()) {
-            gameScene = new Scene(easyGame);
-            stage.setScene(gameScene);
-        }
-        if (event.getSource() == playOff.getMediumBtn()) {
-            gameScene = new Scene(mediumGame);
-            stage.setScene(gameScene);
-        }
-        if (event.getSource() == playOff.getHardBtn()) {
-            gameScene = new Scene(hardGame);
-            stage.setScene(gameScene);
-        }
         if (event.getSource() == login.getRegisterBtn()) {
             System.out.print("clicked");
             stage.setScene(registerScene);
