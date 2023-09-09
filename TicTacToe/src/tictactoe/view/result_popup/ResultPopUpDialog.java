@@ -20,7 +20,8 @@ public  class ResultPopUpDialog extends BorderPane {
     protected final Button restartBtn;
     protected final Label winnerLabel;
     protected final Button exitBtn;
-
+    
+    Media media;
     public Label getWinnerLabel() {
         return winnerLabel;
     }
@@ -34,8 +35,24 @@ public  class ResultPopUpDialog extends BorderPane {
         return exitBtn;
     }
 
-    public ResultPopUpDialog() {
-        Media media = new Media(new File("WinnerVideo.mp4").toURI().toString());  
+    public ResultPopUpDialog(int result) {
+        switch(result){
+            case 0 : 
+                // winning 
+                 media = new Media(new File("WinnerVideo.mp4").toURI().toString());
+                 break;
+            case 1 :
+                // losing 
+                 media = new Media(new File("LoserVideo.mp4").toURI().toString());
+                 break;
+            case 2:
+                //tie
+                 media = new Media(new File("TieVideo.mp4").toURI().toString());
+                 break;
+            
+        }   
+       
+        
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);  
        
