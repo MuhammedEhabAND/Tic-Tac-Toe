@@ -4,38 +4,25 @@ import tictactoe.model.Symbol;
 
 public class MiniMax {
     
+    GameType gameType;
+    
+    public MiniMax(GameType gameType) {
+        this.gameType = gameType;
+    }
+    
     public int[] minimax(Symbol[][] symbols, Symbol symbol) {
-//        int[] bestMove = new int[] { -1, -1 };
-//        int bestScore = (symbol == Symbol.X) ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-//
-//        for (int row = 0; row < 3; row++) {
-//            for (int col = 0; col < 3; col++) {
-//                if (symbols[row][col] == Symbol.UNDEFINED) {
-//                    symbols[row][col] = symbol;
-//                    int score = minimaxHelper(symbols, 0, false);
-//                    symbols[row][col] = Symbol.UNDEFINED;
-//
-//                    if ((symbol == Symbol.X && score > bestScore) || (symbol == Symbol.O && score < bestScore)) {
-//                        bestScore = score;
-//                        bestMove[0] = row;
-//                        bestMove[1] = col;
-//                    }
-//                }
-//            }
-//        }
-//
-//        return bestMove;
         int[] bestMove = new int[] { -1, -1 };
-        int bestScore = Integer.MIN_VALUE;
+
+        int bestScore = (gameType == GameType.EASY) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 if (symbols[row][col] == Symbol.UNDEFINED) {
-                    symbols[row][col] = Symbol.O;
+                    symbols[row][col] = symbol;
                     int score = minimaxHelper(symbols, 0, false);
                     symbols[row][col] = Symbol.UNDEFINED;
 
-                    if (symbol == Symbol.O && score > bestScore) {
+                    if ((gameType == GameType.HARD && score > bestScore) || (gameType == GameType.EASY && score < bestScore)) {
                         bestScore = score;
                         bestMove[0] = row;
                         bestMove[1] = col;

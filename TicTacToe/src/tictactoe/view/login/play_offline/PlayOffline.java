@@ -77,10 +77,7 @@ public class PlayOffline extends AnchorPane {
         
         twoPlayerBtn.setText("Play");
         twoPlayerBtn.setFont(new Font("SansSerif Bold", 22.0));
-        twoPlayerBtn.setOnAction((event) -> {
-            Scene easyGameScene = new Scene(new GameBoard(GameType.TWO_PLAYERS));
-            stage.setScene(easyGameScene);
-        });
+        
         label0.setLayoutX(518.0);
         label0.setLayoutY(75.0);
         label0.setText("One Player");
@@ -97,6 +94,8 @@ public class PlayOffline extends AnchorPane {
         easyBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         easyBtn.setFont(new Font("SansSerif Bold", 22.0));
         easyBtn.setOnAction((event) -> {
+            
+            
             Scene easyGameScene = new Scene(new GameBoard(GameType.EASY));
             stage.setScene(easyGameScene);
         });
@@ -109,9 +108,9 @@ public class PlayOffline extends AnchorPane {
         mediumBtn.setText("Medium");
         mediumBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         mediumBtn.setFont(new Font("SansSerif Bold", 22.0));
-        mediumBtn.setOnAction((event) -> {
-            Scene easyGameScene = new Scene(new GameBoard(GameType.MEDIUM));
-            stage.setScene(easyGameScene);
+        mediumBtn.setOnAction((ActionEvent event) -> {
+            Scene mediumGameScene = new Scene(new GameBoard(GameType.MEDIUM));
+            stage.setScene(mediumGameScene);
         });
         
         hardBtn.setLayoutX(227.0);
@@ -124,8 +123,9 @@ public class PlayOffline extends AnchorPane {
         hardBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         hardBtn.setFont(new Font("SansSerif Bold", 22.0));
         hardBtn.setOnAction((event) -> {
-            Scene easyGameScene = new Scene(new GameBoard(GameType.HARD));
-            stage.setScene(easyGameScene);
+           
+            Scene hardGameScene = new Scene(new GameBoard(GameType.HARD));
+            stage.setScene(hardGameScene);
         });
         
         getChildren().add(label);
