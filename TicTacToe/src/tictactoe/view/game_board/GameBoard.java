@@ -3,9 +3,8 @@ package tictactoe.view.game_board;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,6 +27,7 @@ import tictactoe.model.Move;
 import tictactoe.model.Player;
 import tictactoe.model.Record;
 import tictactoe.model.Symbol;
+import tictactoe.view.login.play_offline.PlayOffline;
 import tictactoe.view.result_popup.ResultPopUpDialog;
 
 public class GameBoard extends AnchorPane {
@@ -63,6 +63,9 @@ public class GameBoard extends AnchorPane {
     protected final Label userScore;
     protected final Label cpuScore;
     protected final Label label1;
+    protected final Button backBtn;
+    protected final Button recordBtn;
+    protected final Button openRecords;
     Player player1;
     Player player2;
     Symbol symbol;
@@ -76,8 +79,11 @@ public class GameBoard extends AnchorPane {
     Files files;
     Boolean isRecording;
     Record record;
+    private final Stage stage;
     
-    public GameBoard(GameType gameType) {
+
+    public GameBoard(GameType gameType ,Stage stage) {
+        this.stage =stage; 
         miniMax = new MiniMax(gameType);
         player1 = new Player("Guest-X", Symbol.X);
         player2 = new Player("Guest-O", Symbol.O);
@@ -87,7 +93,6 @@ public class GameBoard extends AnchorPane {
 
         game = new Game(player1, player2);
         files = new Files();
-
         rectangle = new Rectangle();
         gridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -119,10 +124,13 @@ public class GameBoard extends AnchorPane {
         userScore = new Label();
         cpuScore = new Label();
         label1 = new Label();
+        backBtn = new Button();
+        recordBtn = new Button();
+        openRecords = new Button();
 
         setId("AnchorPane");
-        setPrefHeight(400.0);
-        setPrefWidth(600.0);
+        setPrefHeight(428.0);
+        setPrefWidth(700.0);
         setStyle("-fx-background-color:linear-gradient(to bottom, #1978ae,#33cccc);");
 
 
@@ -130,15 +138,15 @@ public class GameBoard extends AnchorPane {
         rectangle.setArcWidth(5.0);
         rectangle.setFill(javafx.scene.paint.Color.WHITE);
         rectangle.setHeight(285.0);
-        rectangle.setLayoutX(117.0);
-        rectangle.setLayoutY(79.0);
+        rectangle.setLayoutX(175.0);
+        rectangle.setLayoutY(76.0);
         rectangle.setStroke(javafx.scene.paint.Color.BLACK);
         rectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
         rectangle.setWidth(352.0);
 
         gridPane.setGridLinesVisible(true);
-        gridPane.setLayoutX(117.0);
-        gridPane.setLayoutY(79.0);
+        gridPane.setLayoutX(175.0);
+        gridPane.setLayoutY(76.0);
         gridPane.setPrefHeight(285.0);
         gridPane.setPrefWidth(352.0);
 
@@ -285,45 +293,70 @@ public class GameBoard extends AnchorPane {
         imageView7.setPickOnBounds(true);
         imageView7.setPreserveRatio(true);
 
-        label.setLayoutX(14.0);
+        label.setLayoutX(71.0);
         label.setLayoutY(14.0);
         label.setPrefHeight(47.0);
         label.setPrefWidth(190.0);
-        label.setText(player1.getUserName());
+        label.setText("User 1");
         label.setTextFill(javafx.scene.paint.Color.WHITE);
         label.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        label0.setLayoutX(469.0);
+        label0.setLayoutX(554.0);
         label0.setLayoutY(14.0);
         label0.setPrefHeight(47.0);
         label0.setPrefWidth(132.0);
-        label0.setText(player2.getUserName());
+        label0.setText("CPU");
         label0.setTextFill(javafx.scene.paint.Color.WHITE);
         label0.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        userScore.setLayoutX(38.0);
+        userScore.setLayoutX(103.0);
         userScore.setLayoutY(69.0);
         userScore.setPrefHeight(47.0);
         userScore.setPrefWidth(49.0);
         userScore.setText("0");
         userScore.setTextFill(javafx.scene.paint.Color.WHITE);
-        userScore.setFont(new Font("SansSerif Bold Italic", 20.0));
+        userScore.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        cpuScore.setLayoutX(496.0);
+        cpuScore.setLayoutX(581.0);
         cpuScore.setLayoutY(69.0);
         cpuScore.setPrefHeight(47.0);
         cpuScore.setPrefWidth(39.0);
         cpuScore.setText("0");
         cpuScore.setTextFill(javafx.scene.paint.Color.WHITE);
-        cpuScore.setFont(new Font("SansSerif Bold Italic", 20.0));
+        cpuScore.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        label1.setLayoutX(281.0);
+        label1.setLayoutX(326.0);
         label1.setLayoutY(14.0);
         label1.setPrefHeight(47.0);
         label1.setPrefWidth(49.0);
         label1.setText("VS");
         label1.setTextFill(javafx.scene.paint.Color.WHITE);
         label1.setFont(new Font("SansSerif Bold Italic", 30.0));
+
+        backBtn.setLayoutX(27.0);
+        backBtn.setLayoutY(22.0);
+        backBtn.setMnemonicParsing(false);
+        backBtn.setStyle("-fx-background-color: #33cccc; -fx-border-color: WHITE;");
+        backBtn.setText("<");
+        backBtn.setTextFill(javafx.scene.paint.Color.WHITE);
+        backBtn.setOnAction((event) -> {
+            stage.setScene(new Scene(new PlayOffline(stage)));
+        });
+
+        recordBtn.setLayoutX(250.0);
+        recordBtn.setLayoutY(375.0);
+        recordBtn.setMnemonicParsing(false);
+        recordBtn.setStyle("-fx-background-color: #1978ae;");
+        recordBtn.setText("Record");
+        recordBtn.setTextFill(javafx.scene.paint.Color.WHITE);
+
+        openRecords.setLayoutX(368.0);
+        openRecords.setLayoutY(375.0);
+        openRecords.setMnemonicParsing(false); 
+        openRecords.setStyle("-fx-background-color: #33cccc; -fx-border-color: WHITE;");
+        openRecords.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
+        openRecords.setText("Open Records");
+        openRecords.setTextFill(javafx.scene.paint.Color.WHITE);
 
         getChildren().add(rectangle);
         gridPane.getColumnConstraints().add(columnConstraints);
@@ -356,11 +389,15 @@ public class GameBoard extends AnchorPane {
         getChildren().add(userScore);
         getChildren().add(cpuScore);
         getChildren().add(label1);
+        getChildren().add(backBtn);
+        getChildren().add(recordBtn);
+        getChildren().add(openRecords);
+	
         xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
         oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
         
         // Get Game Recorded Button
-        userScore.setOnMouseClicked((MouseEvent event) -> {
+        openRecords.setOnMouseClicked((MouseEvent event) -> {
             try {
                 Record record = files.openFile();
                 playRecorded(record);
@@ -370,8 +407,12 @@ public class GameBoard extends AnchorPane {
         });
         
         // Record Dialog Button
-        cpuScore.setOnMouseClicked((MouseEvent  event) -> {
+        recordBtn.setOnMouseClicked((MouseEvent  event) -> {
             isRecording = true;
+            if(isRecording){
+                recordBtn.setText("Recording");
+                
+            }
             record = new Record(player1, player2);
         });
     
@@ -493,6 +534,7 @@ public class GameBoard extends AnchorPane {
             
             if (isRecording) {
                 isRecording = false;
+                recordBtn.setText("Record");
                 files.saveFile(record);
             }
             
@@ -564,4 +606,3 @@ public class GameBoard extends AnchorPane {
         imageView7.setFitWidth(117.0);
      }
 }
-

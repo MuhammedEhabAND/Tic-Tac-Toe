@@ -142,9 +142,7 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
 
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() == playOff.getTwoPlayerBtn()) {
-            stage.setScene(new Scene(new GameBoard(GameType.TWO_PLAYERS)));
-        }
+        
         
         if (event.getSource() == login.getRegisterBtn()) {
             stage.setScene(registerScene);
