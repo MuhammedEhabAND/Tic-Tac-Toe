@@ -1,6 +1,8 @@
 package tictactoe.model;
 
-public class UserData {
+import java.io.Serializable;
+
+public class UserData implements Serializable {
     public UserData(String userName) {
         UserName = userName;
     }

@@ -117,7 +117,6 @@ public class TicTacToe extends Application implements EventHandler<ActionEvent> 
         playOff = new PlayOffline(stage);
 
         playOn = new PlayOnline();
-
         
         login.getLoginBtn().setOnAction(this);
         login.getRegisterBtn().setOnAction(this);

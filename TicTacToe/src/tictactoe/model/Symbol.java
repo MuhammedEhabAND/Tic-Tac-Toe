@@ -1,7 +1,8 @@
 package tictactoe.model;
 
-public enum Symbol {
+import java.io.Serializable;
 
+public enum Symbol implements Serializable {
     X, 
     O,
     UNDEFINED
