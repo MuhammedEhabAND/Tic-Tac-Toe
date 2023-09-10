@@ -77,7 +77,7 @@ public class GameBoard extends AnchorPane {
     int userScoreInt = 0;
     int cpuScoreInt = 0;
     Files files;
-    Boolean isRecording;
+    Boolean isRecording, isRecordPlaying;
     Record record;
     private final Stage stage;
     
@@ -89,7 +89,9 @@ public class GameBoard extends AnchorPane {
         player1 = new Player("Guest-X", Symbol.X);
         player2 = (gameType == GameType.TWO_PLAYERS) ? new Player("Guest-O", Symbol.O) :new Player("AI", Symbol.O);
         symbol = player1.getSymbol();
-        isRecording = false;
+
+        this.gameType = gameType;
+        isRecording = isRecordPlaying = false;
 
         game = new Game(player1, player2);
         files = new Files();
@@ -419,7 +421,7 @@ public class GameBoard extends AnchorPane {
     }    
     private void playRecorded(Record record) {
         reset();
-        isGameOn = true;
+        isGameOn = isRecordPlaying = true;
         symbol = Symbol.X;
         ImageView imageClicked = null;
         
@@ -458,6 +460,8 @@ public class GameBoard extends AnchorPane {
                 }
             }
         }
+        
+        isRecordPlaying = false;
     }
     
     boolean isGameOn = true;
@@ -540,11 +544,11 @@ public class GameBoard extends AnchorPane {
             
             if (winner.equals("draw")) {
                 // Draw
-            } else if(winner.equals(player1.getUserName())) {
+            } else if(winner.equals(player1.getUserName()) && !isRecordPlaying) {
                 userScoreInt += 5;
                 userScore.setText(String.valueOf(userScoreInt));
       
-            } else {
+            } else if (!isRecordPlaying) {
                 cpuScoreInt += 5;   
                 cpuScore.setText(String.valueOf(cpuScoreInt));
             }
