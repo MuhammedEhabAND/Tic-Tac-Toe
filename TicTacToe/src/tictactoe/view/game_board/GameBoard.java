@@ -84,10 +84,12 @@ public class GameBoard extends AnchorPane {
 
     public GameBoard(GameType gameType ,Stage stage) {
         this.stage =stage; 
+        this.gameType = gameType;
         miniMax = new MiniMax(gameType);
         player1 = new Player("Guest-X", Symbol.X);
-        player2 = new Player("Guest-O", Symbol.O);
+        player2 = (gameType == GameType.TWO_PLAYERS) ? new Player("Guest-O", Symbol.O) :new Player("AI", Symbol.O);
         symbol = player1.getSymbol();
+
         this.gameType = gameType;
         isRecording = isRecordPlaying = false;
 
@@ -297,7 +299,7 @@ public class GameBoard extends AnchorPane {
         label.setLayoutY(14.0);
         label.setPrefHeight(47.0);
         label.setPrefWidth(190.0);
-        label.setText("User 1");
+        label.setText(player1.getUserName());
         label.setTextFill(javafx.scene.paint.Color.WHITE);
         label.setFont(new Font("SansSerif Bold Italic", 30.0));
 
@@ -305,7 +307,7 @@ public class GameBoard extends AnchorPane {
         label0.setLayoutY(14.0);
         label0.setPrefHeight(47.0);
         label0.setPrefWidth(132.0);
-        label0.setText("CPU");
+        label0.setText(player2.getUserName());
         label0.setTextFill(javafx.scene.paint.Color.WHITE);
         label0.setFont(new Font("SansSerif Bold Italic", 30.0));
 
@@ -556,18 +558,22 @@ public class GameBoard extends AnchorPane {
     }
 
     private void showPopUp(String winner) {
-        ResultPopUpDialog result = new ResultPopUpDialog();
+        ResultPopUpDialog result = null;
+        
           
         Stage dialogStage = new Stage();
         dialogStage.initStyle(StageStyle.UNDECORATED);
         dialogStage.initModality(Modality.WINDOW_MODAL);
         
         if(winner.equals("draw")){
+            result = new ResultPopUpDialog(2);
             result.getWinnerLabel().setText("TIE !!");
         } else if(winner.equals(player1.getUserName())){
-            result.getWinnerLabel().setText(winner);
+            result = new ResultPopUpDialog(0);
+            result.getWinnerLabel().setText("The winner is " + winner);
         } else {
-            result.getWinnerLabel().setText(winner);
+            result = new ResultPopUpDialog((gameType == GameType.TWO_PLAYERS) ? 0 : 1);
+            result.getWinnerLabel().setText("The winner is " + winner);
         }
         result.getRestartBtn().setOnAction((event) -> {
             reset();
