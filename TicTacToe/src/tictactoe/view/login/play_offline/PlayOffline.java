@@ -97,7 +97,7 @@ public class PlayOffline extends AnchorPane {
         easyBtn.setText("Easy");
         easyBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         easyBtn.setFont(new Font("SansSerif Bold", 22.0));
-        easyBtn.setOnAction((event) -> {
+        easyBtn.setOnMouseClicked((event) -> {
             
             
             Scene easyGameScene = new Scene(new GameBoard(GameType.EASY ,stage));
@@ -112,7 +112,7 @@ public class PlayOffline extends AnchorPane {
         mediumBtn.setText("Medium");
         mediumBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         mediumBtn.setFont(new Font("SansSerif Bold", 22.0));
-        mediumBtn.setOnAction((ActionEvent event) -> {
+        mediumBtn.setOnMouseClicked((event) -> {
             Scene mediumGameScene = new Scene(new GameBoard(GameType.MEDIUM , stage));
             stage.setScene(mediumGameScene);
         });
@@ -126,7 +126,7 @@ public class PlayOffline extends AnchorPane {
         hardBtn.setText("Hard");
         hardBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         hardBtn.setFont(new Font("SansSerif Bold", 22.0));
-        hardBtn.setOnAction((event) -> {
+        hardBtn.setOnMouseClicked((event) -> {
            
             Scene hardGameScene = new Scene(new GameBoard(GameType.HARD ,stage));
             stage.setScene(hardGameScene);
