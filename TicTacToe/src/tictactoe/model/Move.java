@@ -1,7 +1,12 @@
 package tictactoe.model;
 
-public class Move {
-     Symbol symbol;
+import java.io.Serializable;
+
+public class Move implements Serializable {
+    
+    Symbol symbol;
+    int  column ;
+    int raw;
 
     public Symbol getSymbol() {
         return symbol;
@@ -32,8 +37,11 @@ public class Move {
         this.column = column;
         this.raw = raw;
     }
-
-    int  column ;
-    int raw;
+    
+    @Override
+    public String toString() {
+        return new StringBuffer(this.raw)
+                .append(this.column).toString();
+    }
 
 }

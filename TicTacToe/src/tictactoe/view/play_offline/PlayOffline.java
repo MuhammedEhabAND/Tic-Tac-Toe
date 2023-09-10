@@ -1,18 +1,22 @@
 package tictactoe.view.play_offline;
 
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
+import tictactoe.GameType;
+import tictactoe.view.game_board.GameBoard;
 public class PlayOffline extends AnchorPane {
-
-    
     protected final Label label;
     protected final Button twoPlayerBtn;
     protected final Label label0;
+    protected final Button easyBtn;
+    protected final Button mediumBtn;
+    protected final Button hardBtn;
+    private final Stage stage;
 
     public Label getLabel() {
         return label;
@@ -37,10 +41,10 @@ public class PlayOffline extends AnchorPane {
     public Button getHardBtn() {
         return hardBtn;
     }
-    protected final Button easyBtn;
-    protected final Button mediumBtn;
-    protected final Button hardBtn;
-    private  Stage stage;
+  
+
+    
+
     public PlayOffline(Stage stage) {
         new Scene(this);
         this.stage=stage;
@@ -71,7 +75,11 @@ public class PlayOffline extends AnchorPane {
         
         twoPlayerBtn.setText("Play");
         twoPlayerBtn.setFont(new Font("SansSerif Bold", 22.0));
-
+        twoPlayerBtn.setOnMouseClicked((event) -> {
+            Scene twoPlayerGameScene = new Scene(new GameBoard(GameType.TWO_PLAYERS ,stage));
+            stage.setScene(twoPlayerGameScene);
+        });
+        
         label0.setLayoutX(518.0);
         label0.setLayoutY(75.0);
         label0.setText("One Player");
@@ -87,7 +95,12 @@ public class PlayOffline extends AnchorPane {
         easyBtn.setText("Easy");
         easyBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         easyBtn.setFont(new Font("SansSerif Bold", 22.0));
-
+        easyBtn.setOnAction((event) -> {
+            
+            
+            Scene easyGameScene = new Scene(new GameBoard(GameType.EASY ,stage));
+            stage.setScene(easyGameScene);
+        });
         mediumBtn.setLayoutX(330.0);
         mediumBtn.setLayoutY(272.0);
         mediumBtn.setMnemonicParsing(false);
@@ -97,7 +110,11 @@ public class PlayOffline extends AnchorPane {
         mediumBtn.setText("Medium");
         mediumBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         mediumBtn.setFont(new Font("SansSerif Bold", 22.0));
-
+        mediumBtn.setOnAction((ActionEvent event) -> {
+            Scene mediumGameScene = new Scene(new GameBoard(GameType.MEDIUM , stage));
+            stage.setScene(mediumGameScene);
+        });
+        
         hardBtn.setLayoutX(227.0);
         hardBtn.setLayoutY(364.0);
         hardBtn.setMnemonicParsing(false);
@@ -107,7 +124,12 @@ public class PlayOffline extends AnchorPane {
         hardBtn.setText("Hard");
         hardBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         hardBtn.setFont(new Font("SansSerif Bold", 22.0));
-
+        hardBtn.setOnAction((event) -> {
+           
+            Scene hardGameScene = new Scene(new GameBoard(GameType.HARD ,stage));
+            stage.setScene(hardGameScene);
+        });
+        
         getChildren().add(label);
         getChildren().add(twoPlayerBtn);
         getChildren().add(label0);

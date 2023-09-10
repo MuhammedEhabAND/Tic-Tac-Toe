@@ -1,26 +1,32 @@
 package tictactoe.model;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class Record {
-    String Date;
+public class Record implements Serializable {
+    String date;
     Player player1;
     Player player2;
-    ArrayList<Move> positionOfMoves;
+    ArrayList<Move> moves;
 
-    public Record(String date, Player player1, Player player2, ArrayList<Move> positionOfMoves) {
-        Date = date;
+    public Record(Player player1, Player player2) {
+        LocalDateTime localDate = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        date = localDate.format(format);
+        
         this.player1 = player1;
         this.player2 = player2;
-        this.positionOfMoves = positionOfMoves;
+        this.moves = new ArrayList<>();
     }
 
     public String getDate() {
-        return Date;
+        return date;
     }
 
     public void setDate(String date) {
-        Date = date;
+        this.date = date;
     }
 
     public Player getPlayer1() {
@@ -39,11 +45,23 @@ public class Record {
         this.player2 = player2;
     }
 
-    public ArrayList<Move> getPositionOfMoves() {
-        return positionOfMoves;
+    public ArrayList<Move> getMoves() {
+        return moves;
     }
 
-    public void setPositionOfMoves(ArrayList<Move> positionOfMoves) {
-        this.positionOfMoves = positionOfMoves;
+    public void addMove(Move moves) {
+        this.moves.add(moves);
+    }
+    
+    @Override
+    public String toString() {
+        return new StringBuffer("Date: ")
+                .append(this.date)
+                .append("Player1: ")
+                .append(this.player1.getUserName())
+                .append("Player2: ")
+                .append(this.player2.getUserName())
+                .append("positionOfMoves: ")
+                .append(this.moves).toString();
     }
 }
