@@ -114,6 +114,8 @@ public class PlayOffline extends AnchorPane {
         getChildren().add(easyBtn);
         getChildren().add(mediumBtn);
         getChildren().add(hardBtn);
+        
+
 
     }
 }

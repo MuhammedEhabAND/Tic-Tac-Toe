@@ -322,8 +322,8 @@ public class GameBoard extends AnchorPane {
         getChildren().add(userScore);
         getChildren().add(cpuScore);
         getChildren().add(label1);
-   //     xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
- //       oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
+        xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
+       oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
         
 
     }

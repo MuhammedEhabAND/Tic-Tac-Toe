@@ -27,6 +27,7 @@ import tictactoe.view.register.Register;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
+import javafx.scene.image.Image;
 
 public class Login extends BorderPane implements EventHandler<ActionEvent> {
     protected final AnchorPane anchorPane;
@@ -261,6 +262,10 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         anchorPane0.getChildren().add(loginBtn);
         anchorPane0.getChildren().add(registerBtn);
         anchorPane0.getChildren().add(playOfflineBtn);
+               imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
+
+        
+        
         init();
     }
 
