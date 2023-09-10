@@ -42,6 +42,10 @@ public class Board {
         board [move.getRaw()][move.getColumn()] = move.getSymbol();
     }
     
+    public void setBoard(Symbol[][] symbols) {
+        board = symbols;
+    }
+    
     public Symbol[][] getBoard() {
         return board;
     }

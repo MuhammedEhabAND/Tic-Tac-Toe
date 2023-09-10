@@ -1,5 +1,10 @@
 package tictactoe.view.game_board;
 
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -9,14 +14,21 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import tictactoe.Files;
 import tictactoe.Game;
+import tictactoe.GameType;
+import tictactoe.MiniMax;
 import tictactoe.model.Move;
 import tictactoe.model.Player;
-import tictactoe.model.Result;
+import tictactoe.model.Record;
 import tictactoe.model.Symbol;
+import tictactoe.view.play_offline.PlayOffline;
+import tictactoe.view.result_popup.ResultPopUpDialog;
 
 public class GameBoard extends AnchorPane {
 
@@ -51,10 +63,38 @@ public class GameBoard extends AnchorPane {
     protected final Label userScore;
     protected final Label cpuScore;
     protected final Label label1;
+    protected final Button backBtn;
+    protected final Button recordBtn;
+    protected final Button openRecords;
+    Player player1;
+    Player player2;
+    Symbol symbol;
+    Game game;
+    MiniMax miniMax;
+    GameType gameType;
     Image xImage;
     Image oImage;
-    public GameBoard() {
+    int userScoreInt = 0;
+    int cpuScoreInt = 0;
+    Files files;
+    Boolean isRecording, isRecordPlaying;
+    Record record;
+    private final Stage stage;
+    
 
+    public GameBoard(GameType gameType ,Stage stage) {
+        this.stage =stage; 
+        this.gameType = gameType;
+        miniMax = new MiniMax(gameType);
+        player1 = new Player("Guest-X", Symbol.X);
+        player2 = (gameType == GameType.TWO_PLAYERS) ? new Player("Guest-O", Symbol.O) :new Player("AI", Symbol.O);
+        symbol = player1.getSymbol();
+
+        this.gameType = gameType;
+        isRecording = isRecordPlaying = false;
+
+        game = new Game(player1, player2);
+        files = new Files();
         rectangle = new Rectangle();
         gridPane = new GridPane();
         columnConstraints = new ColumnConstraints();
@@ -86,10 +126,13 @@ public class GameBoard extends AnchorPane {
         userScore = new Label();
         cpuScore = new Label();
         label1 = new Label();
+        backBtn = new Button();
+        recordBtn = new Button();
+        openRecords = new Button();
 
         setId("AnchorPane");
-        setPrefHeight(400.0);
-        setPrefWidth(600.0);
+        setPrefHeight(428.0);
+        setPrefWidth(700.0);
         setStyle("-fx-background-color:linear-gradient(to bottom, #1978ae,#33cccc);");
 
 
@@ -97,15 +140,15 @@ public class GameBoard extends AnchorPane {
         rectangle.setArcWidth(5.0);
         rectangle.setFill(javafx.scene.paint.Color.WHITE);
         rectangle.setHeight(285.0);
-        rectangle.setLayoutX(117.0);
-        rectangle.setLayoutY(79.0);
+        rectangle.setLayoutX(175.0);
+        rectangle.setLayoutY(76.0);
         rectangle.setStroke(javafx.scene.paint.Color.BLACK);
         rectangle.setStrokeType(javafx.scene.shape.StrokeType.INSIDE);
         rectangle.setWidth(352.0);
 
         gridPane.setGridLinesVisible(true);
-        gridPane.setLayoutX(117.0);
-        gridPane.setLayoutY(79.0);
+        gridPane.setLayoutX(175.0);
+        gridPane.setLayoutY(76.0);
         gridPane.setPrefHeight(285.0);
         gridPane.setPrefWidth(352.0);
 
@@ -170,6 +213,7 @@ public class GameBoard extends AnchorPane {
         imageView1.setPreserveRatio(true);
 
         GridPane.setRowIndex(stackPane2, 1);
+        
         stackPane2.setLayoutX(10.0);
         stackPane2.setLayoutY(10.0);
         stackPane2.setPrefHeight(150.0);
@@ -251,23 +295,23 @@ public class GameBoard extends AnchorPane {
         imageView7.setPickOnBounds(true);
         imageView7.setPreserveRatio(true);
 
-        label.setLayoutX(14.0);
+        label.setLayoutX(71.0);
         label.setLayoutY(14.0);
         label.setPrefHeight(47.0);
         label.setPrefWidth(190.0);
-        label.setText("User 1");
+        label.setText(player1.getUserName());
         label.setTextFill(javafx.scene.paint.Color.WHITE);
         label.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        label0.setLayoutX(469.0);
+        label0.setLayoutX(554.0);
         label0.setLayoutY(14.0);
         label0.setPrefHeight(47.0);
         label0.setPrefWidth(132.0);
-        label0.setText("CPU");
+        label0.setText(player2.getUserName());
         label0.setTextFill(javafx.scene.paint.Color.WHITE);
         label0.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        userScore.setLayoutX(38.0);
+        userScore.setLayoutX(103.0);
         userScore.setLayoutY(69.0);
         userScore.setPrefHeight(47.0);
         userScore.setPrefWidth(49.0);
@@ -275,7 +319,7 @@ public class GameBoard extends AnchorPane {
         userScore.setTextFill(javafx.scene.paint.Color.WHITE);
         userScore.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        cpuScore.setLayoutX(496.0);
+        cpuScore.setLayoutX(581.0);
         cpuScore.setLayoutY(69.0);
         cpuScore.setPrefHeight(47.0);
         cpuScore.setPrefWidth(39.0);
@@ -283,13 +327,38 @@ public class GameBoard extends AnchorPane {
         cpuScore.setTextFill(javafx.scene.paint.Color.WHITE);
         cpuScore.setFont(new Font("SansSerif Bold Italic", 30.0));
 
-        label1.setLayoutX(281.0);
+        label1.setLayoutX(326.0);
         label1.setLayoutY(14.0);
         label1.setPrefHeight(47.0);
         label1.setPrefWidth(49.0);
         label1.setText("VS");
         label1.setTextFill(javafx.scene.paint.Color.WHITE);
         label1.setFont(new Font("SansSerif Bold Italic", 30.0));
+
+        backBtn.setLayoutX(27.0);
+        backBtn.setLayoutY(22.0);
+        backBtn.setMnemonicParsing(false);
+        backBtn.setStyle("-fx-background-color: #33cccc; -fx-border-color: WHITE;");
+        backBtn.setText("<");
+        backBtn.setTextFill(javafx.scene.paint.Color.WHITE);
+        backBtn.setOnAction((event) -> {
+            stage.setScene(new PlayOffline(stage).getScene());
+        });
+
+        recordBtn.setLayoutX(250.0);
+        recordBtn.setLayoutY(375.0);
+        recordBtn.setMnemonicParsing(false);
+        recordBtn.setStyle("-fx-background-color: #1978ae;");
+        recordBtn.setText("Record");
+        recordBtn.setTextFill(javafx.scene.paint.Color.WHITE);
+
+        openRecords.setLayoutX(368.0);
+        openRecords.setLayoutY(375.0);
+        openRecords.setMnemonicParsing(false); 
+        openRecords.setStyle("-fx-background-color: #33cccc; -fx-border-color: WHITE;");
+        openRecords.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
+        openRecords.setText("Open Records");
+        openRecords.setTextFill(javafx.scene.paint.Color.WHITE);
 
         getChildren().add(rectangle);
         gridPane.getColumnConstraints().add(columnConstraints);
@@ -322,47 +391,226 @@ public class GameBoard extends AnchorPane {
         getChildren().add(userScore);
         getChildren().add(cpuScore);
         getChildren().add(label1);
+        getChildren().add(backBtn);
+        getChildren().add(recordBtn);
+        getChildren().add(openRecords);
+	
         xImage = new Image(getClass().getResource("/tictactoe/resources/x.png").toExternalForm());
        oImage = new Image(getClass().getResource("/tictactoe/resources/o.png").toExternalForm());
         
-
+        // Get Game Recorded Button
+        openRecords.setOnMouseClicked((MouseEvent event) -> {
+            try {
+                Record record = files.openFile();
+                playRecorded(record);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        // Record Dialog Button
+        recordBtn.setOnMouseClicked((MouseEvent  event) -> {
+            isRecording = true;
+            if(isRecording){
+                recordBtn.setText("Recording");
+                
+            }
+            record = new Record(player1, player2);
+        });
+    
+    }    
+    private void playRecorded(Record record) {
+        reset();
+        isGameOn = isRecordPlaying = true;
+        symbol = Symbol.X;
+        ImageView imageClicked = null;
+        
+        if (record != null) {
+            player1 = record.getPlayer1();
+            player2 = record.getPlayer2();
+            ArrayList<Move> moves = record.getMoves();
+            for (Move move: moves) {
+                int row = move.getRaw(), col = move.getColumn();
+                switch (row) {
+                    case 0:
+                        if (col == 0) imageClicked = imageView;
+                        if (col == 1) imageClicked = imageView0;
+                        if (col == 2) imageClicked = imageView1;
+                        break;
+                    case 1:
+                        if (col == 0) imageClicked = imageView2;
+                        if (col == 1) imageClicked = imageView3;
+                        if (col == 2) imageClicked = imageView4;
+                        break;
+                    case 2:
+                        if (col == 0) imageClicked = imageView5;
+                        if (col == 1) imageClicked = imageView6;
+                        if (col == 2) imageClicked = imageView7;
+                }
+                symbol = move.getSymbol();
+                
+                addMove(imageClicked);
+                String winner = game.makeMove(move);
+                checkWinner(winner);
+                
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        
+        isRecordPlaying = false;
     }
     
-    Player player1 = new Player("User1", Symbol.X);
-    Player player2 = new Player("CPU", Symbol.O);
-    Symbol symbol = player1.getSymbol();
-    Game game = new Game(player1, player2);
-
+    boolean isGameOn = true;
+    
     protected void onTap(MouseEvent mouseEvent, int x, int y){
-        ImageView imageClicked = (ImageView) mouseEvent.getSource();
-        if(imageClicked.getImage() == null) {
-            if(symbol.equals(Symbol.X)){
-                imageClicked.setImage(xImage);
-                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
-                
-            } else {
-                imageClicked.setImage(oImage);
-                imageClicked.setFitWidth(60);
-                symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
-            
-            }
-            
-            Move move = new Move(symbol, x, y);
-            String winner = game.makeMove(move);
-            if (winner != null) {
-                if (winner.equals("draw")) {
-                    // Draw
-                    System.out.println("Game is draw");
-                } else {
-                    if (winner.equals(player1.getUserName())) {
-                        // Win
-                        System.out.println("You win");
-                    } else {
-                        // Lose
-                        System.out.println("You losed");
+        
+        if(isGameOn){
+            ImageView imageClicked = (ImageView) mouseEvent.getSource();
+            if(imageClicked.getImage() == null) {
+                Move move = new Move(symbol, y, x);
+                if (record != null) record.addMove(move);
+                addMove(imageClicked);
+                String winner = game.makeMove(move);
+                if(!checkWinner(winner)){
+                    if ((gameType == GameType.EASY || gameType == GameType.MEDIUM || gameType == GameType.HARD) && isGameOn) {
+                        playCpu();
                     }
                 }
             }
         }
     }
+    
+    private void playCpu() {
+        ImageView imageClicked = null;
+        symbol = Symbol.O;
+        int[] bestMove = miniMax.minimax(game.getBoard(), symbol);
+                
+        int row = bestMove[0], col = bestMove[1];
+        switch (row) {
+            case 0:
+                if (col == 0) imageClicked = imageView;
+                if (col == 1) imageClicked = imageView0;
+                if (col == 2) imageClicked = imageView1;
+                break;
+            case 1:
+                if (col == 0) imageClicked = imageView2;
+                if (col == 1) imageClicked = imageView3;
+                if (col == 2) imageClicked = imageView4;
+                break;
+            case 2:
+                if (col == 0) imageClicked = imageView5;
+                if (col == 1) imageClicked = imageView6;
+                if (col == 2) imageClicked = imageView7;
+        }
+        
+        Move move = new Move(symbol, col, row);
+        if (record != null) record.addMove(move);
+        
+        addMove(imageClicked);
+        String winner = game.makeMove(new Move(Symbol.O, col, row));
+        checkWinner(winner);
+    }
+    
+    private void addMove(ImageView imageClicked) {
+        if(isGameOn){
+            if(imageClicked.getImage() == null) {
+                if(symbol.equals(Symbol.X)){
+                    imageClicked.setImage(xImage);
+                    symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+                
+                } else {
+                    imageClicked.setImage(oImage);
+                    imageClicked.setFitWidth(60);        
+                    symbol = symbol.equals(Symbol.X) ? Symbol.O : Symbol.X;
+                }
+            }
+        }
+    }
+
+    private boolean checkWinner(String winner) {
+        if (winner != null) {
+            isGameOn = false;
+            showPopUp(winner);
+            
+            if (isRecording) {
+                isRecording = false;
+                recordBtn.setText("Record");
+                files.saveFile(record);
+            }
+            
+            if (winner.equals("draw")) {
+                // Draw
+            } else if(winner.equals(player1.getUserName()) && !isRecordPlaying) {
+                userScoreInt += 5;
+                userScore.setText(String.valueOf(userScoreInt));
+      
+            } else if (!isRecordPlaying) {
+                cpuScoreInt += 5;   
+                cpuScore.setText(String.valueOf(cpuScoreInt));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void showPopUp(String winner) {
+        ResultPopUpDialog result = null;
+        
+          
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.UNDECORATED);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        
+        if(winner.equals("draw")){
+            result = new ResultPopUpDialog(2);
+            result.getWinnerLabel().setText("TIE !!");
+        } else if(winner.equals(player1.getUserName())){
+            result = new ResultPopUpDialog(0);
+            result.getWinnerLabel().setText("The winner is " + winner);
+        } else {
+            result = new ResultPopUpDialog((gameType == GameType.TWO_PLAYERS) ? 0 : 1);
+            result.getWinnerLabel().setText("The winner is " + winner);
+        }
+        result.getRestartBtn().setOnAction((event) -> {
+            reset();
+            dialogStage.close();
+        });
+        
+        Scene scene = new Scene(result);
+        dialogStage.setScene(scene);
+        dialogStage.showAndWait();
+    }
+
+    private void reset() {
+        game = new Game(player1 , player2);
+        symbol =Symbol.X;
+        resetImages();
+        isGameOn = true;
+    }
+
+    private void resetImages() {
+        imageView.setImage(null);
+        imageView0.setImage(null);
+        imageView1.setImage(null);
+        imageView2.setImage(null);
+        imageView3.setImage(null);
+        imageView4.setImage(null);
+        imageView5.setImage(null);
+        imageView6.setImage(null);
+        imageView7.setImage(null);
+        
+        imageView.setFitWidth(117.0);
+        imageView0.setFitWidth(117.0);
+        imageView1.setFitWidth(117.0);
+        imageView2.setFitWidth(117.0);
+        imageView3.setFitWidth(117.0);
+        imageView4.setFitWidth(117.0);
+        imageView5.setFitWidth(117.0);
+        imageView6.setFitWidth(117.0);
+        imageView7.setFitWidth(117.0);
+     }
 }

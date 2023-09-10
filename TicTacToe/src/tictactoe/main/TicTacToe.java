@@ -15,11 +15,17 @@ import tictactoe.view.register.Register;
 import tictactoe.view.login.Login;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
+import tictactoe.view.play_offline.PlayOffline;
+import tictactoe.view.play_online.PlayOnline;
 public class TicTacToe extends Application {
+    private Stage stage;
+    private Login login;
+    private Register register;
+    private PlayOnline playOn;
     Socket mySocket;
     DataInputStream dataInputStream;
     PrintStream printStream;
+   PlayOffline  playOff;
 
     @Override
     public void start(Stage stage) {
@@ -38,8 +44,11 @@ public class TicTacToe extends Application {
             new Login(stage, printStream, dataInputStream);
             new Register(stage, printStream, dataInputStream);
         }
+         this.stage = stage;
+        playOff = new PlayOffline(stage);
+        stage.setResizable(false);
+        stage.show();
     }
-
     public static void main(String[] args) {
         launch(args);
     }
