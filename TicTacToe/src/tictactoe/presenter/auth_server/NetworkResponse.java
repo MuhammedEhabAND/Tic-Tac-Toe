@@ -1,4 +1,4 @@
-package tictactoe.presenter.auth.server;
+package tictactoe.presenter.auth_server;
 
 import tictactoe.utils.Validation;
 

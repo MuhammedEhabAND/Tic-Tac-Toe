@@ -13,8 +13,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import tictactoe.model.User;
-
-
+import tictactoe.presenter.auth_validation.AuthInputValidator;
+import tictactoe.presenter.auth_validation.AuthInputValidatorImpl;
+import tictactoe.presenter.auth_validation.Authentication;
+import tictactoe.presenter.auth_validation.AuthenticationImpl;
+import tictactoe.presenter.auth_server.NetworkResponse;
+import tictactoe.presenter.auth_server.NetworkListener;
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
 import tictactoe.view.play_offline.PlayOffline;
@@ -23,12 +27,6 @@ import tictactoe.view.register.Register;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
-import tictactoe.presenter.auth.server.NetworkListener;
-import tictactoe.presenter.auth.server.NetworkResponse;
-import tictactoe.presenter.auth.validation.AuthInputValidator;
-import tictactoe.presenter.auth.validation.AuthInputValidatorImpl;
-import tictactoe.presenter.auth.validation.Authentication;
-import tictactoe.presenter.auth.validation.AuthenticationImpl;
 
 public class Login extends BorderPane implements EventHandler<ActionEvent> {
     protected final AnchorPane anchorPane;

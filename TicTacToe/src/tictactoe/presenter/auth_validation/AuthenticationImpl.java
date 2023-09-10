@@ -1,4 +1,4 @@
-package tictactoe.presenter.auth.validation;
+package tictactoe.presenter.auth_validation;
 
 import tictactoe.model.User;
 import tictactoe.utils.Validation;

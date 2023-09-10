@@ -1,4 +1,4 @@
-package tictactoe.presenter.auth.validation;
+package tictactoe.presenter.auth_validation;
 
 import java.util.regex.Pattern;
 
