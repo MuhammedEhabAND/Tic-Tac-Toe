@@ -342,7 +342,8 @@ public class GameBoard extends AnchorPane {
         backBtn.setText("<");
         backBtn.setTextFill(javafx.scene.paint.Color.WHITE);
         backBtn.setOnAction((event) -> {
-            stage.setScene(new Scene(new PlayOffline(stage)));
+            System.out.println("back button clicked");
+            stage.setScene(new PlayOffline(stage).getScene());
         });
 
         recordBtn.setLayoutX(250.0);

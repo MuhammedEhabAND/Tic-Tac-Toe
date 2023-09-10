@@ -2,15 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group/>
-=======
         <group>
             <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/game_board/GameBoard.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/navigation/Navigation.java</file>
+            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/login/Login.java</file>
+            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/Game.java</file>
+            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/Board.java</file>
+            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/result_popup/ResultPopUpDialog.java</file>
             <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/main/TicTacToe.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/MiniMax.java</file>
+            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/model/Move.java</file>
         </group>
->>>>>>> origin/feature/test
     </open-files>
 </project-private>

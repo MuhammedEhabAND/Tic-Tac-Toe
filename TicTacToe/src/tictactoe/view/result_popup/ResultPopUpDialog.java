@@ -40,15 +40,15 @@ public  class ResultPopUpDialog extends BorderPane {
         switch(result){
             case 0 : 
                 // winning 
-                 media = new Media(new File("/tictactoe/resources/WinnerVideo.mp4").toURI().toString());
+                 media = new Media(new File("src/tictactoe/resources/WinnerVideo.mp4").toURI().toString());
                  break;
             case 1 :
                 // losing 
-                 media = new Media(new File("/tictactoe/resources/LoserVideo.mp4").toURI().toString());
+                 media = new Media(new File("src/tictactoe/resources/LoserVideo.mp4").toURI().toString());
                  break;
             case 2:
                 //tie
-                 media = new Media(new File("/tictactoe/resources/TieVideo.mp4").toURI().toString());
+                 media = new Media(new File("src/tictactoe/resources/TieVideo.mp4").toURI().toString());
                  break;
             
         }   
