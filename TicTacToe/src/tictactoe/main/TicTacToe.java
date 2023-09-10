@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import tictactoe.view.play_offline.PlayOffline;
 import tictactoe.view.play_online.PlayOnline;
 public class TicTacToe extends Application {
+
     private Stage stage;
     private Login login;
     private Register register;
@@ -49,6 +50,8 @@ public class TicTacToe extends Application {
         stage.setResizable(false);
         stage.show();
     }
+
+
     public static void main(String[] args) {
         launch(args);
     }

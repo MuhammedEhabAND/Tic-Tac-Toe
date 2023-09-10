@@ -50,6 +50,7 @@ public  class ResultPopUpDialog extends BorderPane {
                 //tie
                  media = new Media(new File("src/tictactoe/resources/TieVideo.mp4").toURI().toString());
                  break;
+ 
             
         }   
        
