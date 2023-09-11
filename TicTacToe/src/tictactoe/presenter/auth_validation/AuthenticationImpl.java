@@ -13,9 +13,9 @@ public class AuthenticationImpl implements Authentication {
     @Override
     public Validation login(User user) {
         if (!authInputValidator.usernameValidator(user.getUserName())) {
-            return new Validation(false, "Username not valid");
+            return new Validation(true, "Username not valid");
         } else if (!authInputValidator.passwordValidator(user.getPassword())) {
-            return new Validation(false, "Password not valid");
+            return new Validation(true, "Password not valid");
         }
 
         return new Validation(true, "");
@@ -24,11 +24,11 @@ public class AuthenticationImpl implements Authentication {
     @Override
     public Validation signUp(User user, String confirmPassword) {
         if (!authInputValidator.usernameValidator(user.getUserName())) {
-            return new Validation(false, "Username not valid");
+            return new Validation(true, "Username not valid");
         } else if (!authInputValidator.passwordValidator(user.getPassword())) {
-            return new Validation(false, "Password not valid");
+            return new Validation(true, "Password not valid");
         } else if (!Objects.equals(user.getPassword(), confirmPassword)) {
-            return new Validation(false, "Password not Equal");
+            return new Validation(true, "Password not Equal");
         }
         return new Validation(true, "");
     }

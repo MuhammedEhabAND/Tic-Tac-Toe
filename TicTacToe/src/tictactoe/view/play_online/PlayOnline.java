@@ -2,6 +2,11 @@ package tictactoe.view.play_online;
 
 
 
+import java.io.DataInputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,9 +21,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoe.model.User;
+import tictactoe.presenter.auth_server.NetworkListener;
+import tictactoe.presenter.auth_server.NetworkResponse;
+import tictactoe.presenter.auth_validation.AuthInputValidator;
+import tictactoe.presenter.auth_validation.AuthInputValidatorImpl;
+import tictactoe.presenter.auth_validation.Authentication;
+import tictactoe.presenter.auth_validation.AuthenticationImpl;
+import tictactoe.presenter.retrieve_online_users.OnlineUsersGetter;
+import tictactoe.presenter.retrieve_online_users.ServerResponse;
+import tictactoe.utils.Constants;
+import tictactoe.utils.Validation;
 
 public  class PlayOnline extends BorderPane {
-
+    DataInputStream dataInputStream;
+    PrintStream printStream;
     protected final Button button;
     protected final AnchorPane anchorPane;
     protected final ImageView imageView;
@@ -50,10 +67,17 @@ public  class PlayOnline extends BorderPane {
     protected final ImageView imageView10;
     protected final ImageView imageView11;
     private Stage stage;
+    private final User user;
+    private final PrintStream outStream;
+     ArrayList<String> onlineUsersList = new ArrayList<String>() ;
 
-    public PlayOnline(Stage stage) {
+    public PlayOnline(Stage stage , User user ,PrintStream outStream ,DataInputStream dataInputStream) {
         new Scene(this);
         this.stage = stage;
+        this.user = user;
+        this.outStream = outStream;
+        this.dataInputStream = dataInputStream;
+        
 
         button = new Button();
         anchorPane = new AnchorPane();
@@ -126,7 +150,7 @@ public  class PlayOnline extends BorderPane {
         text.setLayoutY(151.0);
         text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text.setStrokeWidth(0.0);
-        text.setText("User Name");
+        text.setText(user.getUserName());
         text.setWrappingWidth(115.8525390625);
         text.setFont(new Font(17.0));
 
@@ -348,5 +372,34 @@ public  class PlayOnline extends BorderPane {
         hBox.getChildren().add(anchorPane4);
 
     }
-}
+    void retrieveOnlineUsers() {
+       
+            new Thread(
+                    new OnlineUsersGetter(
+                            true,
+                            dataInputStream,
+                            user,
+                            Constants.GET_USERS,
+                            outStream,
+                            new ServerResponse() {
+                @Override
+                public void onSuccess() {
+                }
 
+                @Override
+                public void onError(String errorMessage) {
+                }
+            },onlineUsersList
+
+                    )
+            ) .start();
+        
+
+
+    
+
+
+
+            
+    }
+}

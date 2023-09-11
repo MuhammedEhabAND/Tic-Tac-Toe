@@ -249,7 +249,7 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
                                 @Override
                                 public void onSuccess(Validation validation) {
                                     Platform.runLater(() -> {
-                                        stage.setScene(new PlayOnline(stage).getScene());
+                                        stage.setScene(new PlayOnline(stage , new User(userName , password) ,outStream ,dataInputStream).getScene());
                                     });
                                 }
 
@@ -276,7 +276,7 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == signUpBtn) {
-            playOn = new PlayOnline(stage);
+            playOn = new PlayOnline(stage ,new User("","") ,outStream , dataInputStream);
             signUp();
         } else if (event.getSource() == alreadyHaveAccBtn) {
             stage.setScene( new Login(stage, outStream, dataInputStream).getScene());

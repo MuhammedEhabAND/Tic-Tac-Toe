@@ -61,7 +61,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == loginBtn) {
-            playOn = new PlayOnline(stage);
+            playOn = new PlayOnline(stage , new User("","") ,outStream , dataInputStream);
             signIn();
         } else if (event.getSource() == registerBtn) {
             stage.setScene(new Register(stage, outStream, dataInputStream).getScene());
@@ -88,7 +88,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
                                 @Override
                                 public void onSuccess(Validation validation) {
                                     Platform.runLater(() ->
-                                            stage.setScene(new PlayOnline(stage).getScene()));
+                                            stage.setScene(new PlayOnline(stage , new User(userName ,password),outStream , dataInputStream).getScene()));
                                 }
 
                                 @Override
@@ -263,7 +263,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         anchorPane0.getChildren().add(loginBtn);
         anchorPane0.getChildren().add(registerBtn);
         anchorPane0.getChildren().add(playOfflineBtn);
-               imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
+        imageView.setImage(new Image(getClass().getResource("/tictactoe/resources/Logo.gif").toExternalForm()));
 
         
         
