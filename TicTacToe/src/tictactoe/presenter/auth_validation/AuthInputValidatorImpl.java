@@ -16,7 +16,7 @@ public class AuthInputValidatorImpl implements AuthInputValidator{
     public Boolean usernameValidator(String userName) {
          String USERNAME_PATTERN = "^[a-zA-Z0-9]+$";
         boolean validSyntax = Pattern.compile(USERNAME_PATTERN).matcher(userName).matches();
-        boolean validLength= userName.length()>4&&userName.length()<10;
+        boolean validLength= userName.length()>4&&userName.length()<=10;
         return validLength && validSyntax;
     }
 }

@@ -79,6 +79,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         if (validation.isValid()) {
             new Thread(
                     new NetworkListener(
+                            true,
                             dataInputStream,
                             new User(userName, password),
                             Constants.LOGIN,

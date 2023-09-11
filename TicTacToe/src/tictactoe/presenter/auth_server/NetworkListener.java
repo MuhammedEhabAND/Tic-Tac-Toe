@@ -15,8 +15,9 @@ public class NetworkListener implements Runnable {
     private final NetworkResponse callback;
     private final PrintStream printStream;
     private final String type;
+    boolean state =true;
 
-    public NetworkListener(DataInputStream dataInputStream, User user,
+    public NetworkListener( boolean state,DataInputStream dataInputStream, User user,
                            String type, PrintStream printStream, NetworkResponse callback) {
 
         this.dataInputStream = dataInputStream;
@@ -24,40 +25,52 @@ public class NetworkListener implements Runnable {
         this.callback = callback;
         this.printStream = printStream;
         this.type = type;
+        this.state=state;
     }
 
     @Override
     public void run() {
         try {
-            while (true) {
+            while (state) {
+                printStream.println(type);
                 String response = dataInputStream.readLine();
+                System.out.println(response);
+
                 if (response.equals(Constants.SERVER_STOP)) {
                     callback.onError("Network Error");
+                    state =false;
+
                 } else {
-                    printStream.println(type);
+
                     printStream.println(user.getUserName());
                     printStream.println(user.getPassword());
                     String remoteUserName = dataInputStream.readLine();
+                    System.out.println(remoteUserName);
 
                     if (remoteUserName.equals(user.getUserName())) {
                         String loginOrRegister = dataInputStream.readLine();
+                        System.out.println(loginOrRegister);
                         if (loginOrRegister.equals(Constants.LOGIN)) {
                             String loginState = dataInputStream.readLine();
-                            if (loginState.equals(Constants.NotValidPasswordAndUseName)) {
+                            System.out.println(loginState);
+                            if (loginState.equals(Constants.NOT_VALID_LOGIN)) {
 
                                 callback.onError("Login Failed");
-                            } else {
+                            } else if(loginState.equals(Constants.VALID_LOGIN)){
                                 callback.onSuccess(new Validation(true, "Login complete"));
                             }
+                            state =false;
                         } else if (loginOrRegister.equals(Constants.REGISTER)) {
                             String registerState = dataInputStream.readLine();
-                            if (registerState.equals(Constants.NotValid_REGISTER)) {
+                            System.out.println(registerState);
+                            if (registerState.equals(Constants.NOT_VALID_REGISTER)) {
                                 callback.onError("Signup Failed");
-                            } else if (registerState.equals(Constants.Valid_REGISTER)) {
+                            } else if (registerState.equals(Constants.VALID_REGISTER)) {
                                 callback.onSuccess(new Validation(true, "Signup complete"));
 
 
                             }
+                            state =false;
                         }
                     }
                 }

@@ -13,9 +13,9 @@ public class AuthenticationImpl implements Authentication {
     @Override
     public Validation login(User user) {
         if (!authInputValidator.usernameValidator(user.getUserName())) {
-            return new Validation(true, "Username not valid");
+            return new Validation(false, "Username not valid");
         } else if (!authInputValidator.passwordValidator(user.getPassword())) {
-            return new Validation(true, "Password not valid");
+            return new Validation(false, "Password not valid");
         }
 
         return new Validation(true, "");
