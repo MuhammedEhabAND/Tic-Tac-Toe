@@ -78,7 +78,7 @@ public  class PlayOnline extends BorderPane {
         this.outStream = outStream;
         this.dataInputStream = dataInputStream;
         
-
+        retrieveOnlineUsers();
         button = new Button();
         anchorPane = new AnchorPane();
         imageView = new ImageView();

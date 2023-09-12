@@ -25,7 +25,7 @@ public class OnlineUsersGetter implements Runnable {
     private final ServerResponse callback;
     private final PrintStream printStream;
     private final String type;
-    private ArrayList<String> onlineUsers;
+    private ArrayList<String> onlineUsers = new ArrayList<String>();
     boolean state =true;
 
     public OnlineUsersGetter( boolean state,DataInputStream dataInputStream, User user,
@@ -47,6 +47,7 @@ public class OnlineUsersGetter implements Runnable {
     public void run() {
         try {
             while (state) {
+            state=false;
             printStream.println(type);
             printStream.println(user.getUserName());
                 if (dataInputStream.readLine().equals(Constants.SERVER_STOP)) {
@@ -61,14 +62,19 @@ public class OnlineUsersGetter implements Runnable {
                             
                             String message = dataInputStream.readLine();
                             if(message.equals(type)) {
-                                int noOfUsers = Integer.parseInt(dataInputStream.readLine());
-                                onlineUsers = new ArrayList<String>();
+                                String serverResponse = dataInputStream.readLine();
+                                System.out.println("server res :" +serverResponse);
+                                
+                                
+                                int noOfUsers = Integer.parseInt(serverResponse);
+                                 
                                 for (int i = 0; i < noOfUsers; i++) {
       
                                     String userName = dataInputStream.readLine();
-                                    onlineUsers.add(dataInputStream.readLine());
+                                    onlineUsers.add(userName);
                                     System.out.println("userName: " + userName);
                                 }
+                                
                                 if(onlineUsers.equals(null)){
                                 callback.onError("Empty list of online users");
                                 }else{
