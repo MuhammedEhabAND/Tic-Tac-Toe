@@ -6,13 +6,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
-public  class FXMLBase extends AnchorPane {
+public  class ItemOnlineUser extends AnchorPane {
 
     protected final Label user_name;
     protected final ImageView imageView;
     protected final ImageView imageView0;
 
-    public FXMLBase(String username) {
+    public ItemOnlineUser(String username) {
 
         user_name = new Label();
         imageView = new ImageView();

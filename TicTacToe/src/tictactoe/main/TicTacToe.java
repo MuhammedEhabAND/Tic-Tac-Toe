@@ -11,14 +11,10 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import tictactoe.utils.Constants;
-import tictactoe.view.register.Register;
-import tictactoe.view.login.Login;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import tictactoe.view.play_offline.PlayOffline;
 import tictactoe.view.play_online.PlayOnline;
 public class TicTacToe extends Application {
-
     Socket mySocket;
     DataInputStream dataInputStream;
     PrintStream printStream;
