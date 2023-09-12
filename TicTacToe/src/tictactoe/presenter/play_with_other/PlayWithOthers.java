@@ -19,14 +19,14 @@ import tictactoe.utils.Constants;
  */
 public class PlayWithOthers implements Runnable {
     private final DataInputStream dataInputStream;
-    private final User user;
+    private final String user;
     private final ServerResponse callback;
     private final PrintStream printStream;
     private final String type;
     private final String opUserName;
-    boolean state =true;
+   
 
-    public PlayWithOthers( boolean state,DataInputStream dataInputStream, User user,
+    public PlayWithOthers( DataInputStream dataInputStream, String user,
                            String type, PrintStream printStream, ServerResponse callback , String opUserName ) {
 
         this.dataInputStream = dataInputStream;
@@ -34,7 +34,6 @@ public class PlayWithOthers implements Runnable {
         this.callback = callback;
         this.printStream = printStream;
         this.type = type;
-        this.state=state;
         this.opUserName = opUserName;
         
         
@@ -44,21 +43,21 @@ public class PlayWithOthers implements Runnable {
     @Override
     public void run() {
         try {
-            while (state) {
             printStream.println(type);
-            printStream.println(user.getUserName());
-            printStream.println(opUserName);
-
+          
             if (dataInputStream.readLine().equals(Constants.SERVER_STOP)) {
                         // Server Stopped
                         System.out.println("Server Stopped");
                     } else {
                         // Server is Running
                         System.out.println("Server is Running");
+                          printStream.println(user);
+                          printStream.println(opUserName);
+
                         String remoteUserName = dataInputStream.readLine();
-                        if (remoteUserName.equals(user.getUserName())) {
+                        if (remoteUserName.equals(user)) {
                             // Server returned to this user
-                            
+                            System.out.println("here we are");
                             String message = dataInputStream.readLine();
                          
                             if(message.equals(Constants.PLAY_WITH_USER)) {
@@ -66,7 +65,7 @@ public class PlayWithOthers implements Runnable {
                                 // Get Response from dialog
                                 String userResponse = Constants.USER_REJECTED;
                                 printStream.println(Constants.PLAY_WITH_USER_RESPONSE);
-                                printStream.println(user.getUserName());
+                                printStream.println(user);
                                 printStream.println(userResponse);
                             
                             } else if (message.equals(Constants.PLAY_WITH_USER_RESPONSE)) {
@@ -78,9 +77,11 @@ public class PlayWithOthers implements Runnable {
                                     System.out.println("User Rejected");
                                 }
                             }
+                        }else{
+                            System.out.println("We are here");
                         }
                     }
-            }
+            
         }  catch (IOException ex) {
             callback.onError(ex.getMessage());
         }

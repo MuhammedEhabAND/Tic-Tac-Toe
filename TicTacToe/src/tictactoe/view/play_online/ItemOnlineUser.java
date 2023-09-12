@@ -5,19 +5,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import tictactoe.model.User;
+import tictactoe.presenter.OnClickItemListener;
 
 public  class ItemOnlineUser extends AnchorPane {
 
     protected final Label user_name;
     protected final ImageView imageView;
     protected final ImageView imageView0;
-
-    public ItemOnlineUser(String username) {
-
+    private OnClickItemListener onClickItemListener;
+    public ItemOnlineUser(OnClickItemListener onClickItemListener ,String opponent) {
+        this.onClickItemListener = onClickItemListener;
         user_name = new Label();
         imageView = new ImageView();
         imageView0 = new ImageView();
         setId("AnchorPane");
+        setOnMouseClicked(this::onItemMouseClicked);
         setPrefHeight(190.0);
         setPrefWidth(116.0);
         setStyle("-fx-background-color: #ffffff;");
@@ -26,11 +29,11 @@ public  class ItemOnlineUser extends AnchorPane {
         user_name.setLayoutY(105.0);
         user_name.setPrefHeight(50.0);
         user_name.setPrefWidth(125.0);
-        user_name.setText(username);
+        user_name.setText(opponent);
         user_name.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         user_name.setTextFill(javafx.scene.paint.Color.valueOf("#000000"));
         user_name.setFont(new Font(19.0));
-
+        
         imageView.setFitHeight(24.0);
         imageView.setFitWidth(23.0);
         imageView.setLayoutX(101.0);
@@ -49,5 +52,9 @@ public  class ItemOnlineUser extends AnchorPane {
         getChildren().add(imageView);
         getChildren().add(imageView0);
 
+    }
+    protected  void onItemMouseClicked(javafx.scene.input.MouseEvent mouseEvent){
+            onClickItemListener.onClick(user_name.getText());
+        
     }
 }

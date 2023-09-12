@@ -27,19 +27,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tictactoe.model.User;
+import tictactoe.presenter.OnClickItemListener;
 import tictactoe.presenter.auth_server.NetworkListener;
 import tictactoe.presenter.auth_server.NetworkResponse;
 import tictactoe.presenter.auth_validation.AuthInputValidator;
 import tictactoe.presenter.auth_validation.AuthInputValidatorImpl;
 import tictactoe.presenter.auth_validation.Authentication;
 import tictactoe.presenter.auth_validation.AuthenticationImpl;
+import tictactoe.presenter.play_with_other.PlayWithOthers;
 import tictactoe.presenter.retrieve_online_users.OnlineUsersGetter;
 import tictactoe.presenter.retrieve_online_users.ServerResponse;
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
 
 
-public  class PlayOnline extends BorderPane {
+public  class PlayOnline extends BorderPane implements OnClickItemListener {
     DataInputStream dataInputStream;
     PrintStream printStream;
     protected final Button button;
@@ -62,7 +64,7 @@ public  class PlayOnline extends BorderPane {
         
 
 
-    public PlayOnline(Stage stage , User user ,PrintStream outStream ,DataInputStream dataInputStream) {
+    public PlayOnline(Stage stage , User user ,PrintStream outStream ,DataInputStream dataInputStream)  {
            new Scene(this);
         this.stage = stage;
         this.user = user;
@@ -203,7 +205,7 @@ public  class PlayOnline extends BorderPane {
                             new ServerResponse() {
                 @Override
                 public void onSuccess() {
-                    initialize();
+                    addOnlineUsersToListView();
                 }
 
                 @Override
@@ -213,20 +215,32 @@ public  class PlayOnline extends BorderPane {
 
                     )
             ) .start();
-        
-
-
-    
-
-
-
-            
+       
     }
-        public void initialize() {
+    void playWithOtherUser(String opUserName){
+            new Thread(
+                    new PlayWithOthers(
+                            dataInputStream,
+                            user.getUserName(),
+                            Constants.PLAY_WITH_USER,
+                            printStream,
+                            new ServerResponse() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                }
+            }, opUserName)
+            ) .start();
+    
+    }
+        public void addOnlineUsersToListView() {
              List<ItemOnlineUser> items = new ArrayList<>();
             for (String userName : onlineUsersList) {
                 if(!userName.equals(user.getUserName())){
-                items.add(    new ItemOnlineUser(userName));
+                items.add(    new ItemOnlineUser(this ,userName));
                            }
             }
            list_of_Online_users.getItems().addAll(items);
@@ -234,6 +248,11 @@ public  class PlayOnline extends BorderPane {
           
 
       
+    }
+
+    @Override
+    public void onClick(String opponentUserName) {
+        playWithOtherUser(opponentUserName);//To change body of generated methods, choose Tools | Templates.
     }
 }
 
