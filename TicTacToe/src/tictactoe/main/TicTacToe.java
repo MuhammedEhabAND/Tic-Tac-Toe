@@ -11,14 +11,13 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 import tictactoe.utils.Constants;
-import tictactoe.view.register.Register;
-import tictactoe.view.login.Login;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import tictactoe.view.login.Login;
 import tictactoe.view.play_offline.PlayOffline;
 import tictactoe.view.play_online.PlayOnline;
+import tictactoe.view.register.Register;
 public class TicTacToe extends Application {
-
     Socket mySocket;
     DataInputStream dataInputStream;
     PrintStream printStream;
@@ -36,9 +35,9 @@ public class TicTacToe extends Application {
             ex.printStackTrace();
             System.out.println("Error");
         }finally {
-            new Login(stage, printStream, dataInputStream);
-            new Register(stage, printStream, dataInputStream);
-            new PlayOffline(stage);
+          new Login(stage, printStream, dataInputStream);
+          new Register(stage, printStream, dataInputStream);
+
         }
      
         stage.setResizable(false);
