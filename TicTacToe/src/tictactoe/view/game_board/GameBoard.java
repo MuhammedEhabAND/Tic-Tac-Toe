@@ -404,9 +404,10 @@ public class GameBoard extends AnchorPane {
             try {
                 Record record = files.openFile();
                 playRecorded(record);
+                
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }          
         });
         
         // Record Dialog Button
@@ -419,18 +420,20 @@ public class GameBoard extends AnchorPane {
             record = new Record(player1, player2);
         });
     
-    }    
-    private void playRecorded(Record record) {
+    }
+    
+private void playRecorded(Record record) {
+    new Thread(() -> {
         reset();
         isGameOn = isRecordPlaying = true;
         symbol = Symbol.X;
         ImageView imageClicked = null;
-        
+
         if (record != null) {
             player1 = record.getPlayer1();
             player2 = record.getPlayer2();
             ArrayList<Move> moves = record.getMoves();
-            for (Move move: moves) {
+            for (Move move : moves) {
                 int row = move.getRaw(), col = move.getColumn();
                 switch (row) {
                     case 0:
@@ -449,27 +452,30 @@ public class GameBoard extends AnchorPane {
                         if (col == 2) imageClicked = imageView7;
                 }
                 symbol = move.getSymbol();
-                
+
                 addMove(imageClicked);
-                String winner = game.makeMove(move);
-                checkWinner(winner);
-                
+
+              
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
             }
+            reset();
         }
-        
+       
         isRecordPlaying = false;
-    }
-    
+        
+    }).start();
+}
+
     boolean isGameOn = true;
     
     protected void onTap(MouseEvent mouseEvent, int x, int y){
         
-        if(isGameOn){
+        if(isGameOn && isRecordPlaying== false){
             ImageView imageClicked = (ImageView) mouseEvent.getSource();
             if(imageClicked.getImage() == null) {
                 Move move = new Move(symbol, y, x);

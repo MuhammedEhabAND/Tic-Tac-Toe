@@ -5,6 +5,8 @@
  */
 package tictactoe.presenter.retrieve_online_users;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Mohammed
