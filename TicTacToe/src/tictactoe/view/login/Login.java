@@ -61,7 +61,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == loginBtn) {
-            playOn = new PlayOnline(stage , new User("","") ,outStream , dataInputStream);
+           // playOn = new PlayOnline(stage , new User("","") ,outStream , dataInputStream);
             signIn();
         } else if (event.getSource() == registerBtn) {
             stage.setScene(new Register(stage, outStream, dataInputStream).getScene());
