@@ -36,9 +36,11 @@ public class TicTacToe extends Application {
             ex.printStackTrace();
             System.out.println("Error");
         }finally {
-            new Login(stage, printStream, dataInputStream);
-            new Register(stage, printStream, dataInputStream);
-            new PlayOffline(stage);
+     //     new Login(stage, printStream, dataInputStream);
+     //      new Register(stage, printStream, dataInputStream);
+          // new PlayOffline(stage);
+            new PlayOnline(stage);
+            
         }
      
         stage.setResizable(false);
