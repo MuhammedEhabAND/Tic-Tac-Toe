@@ -36,7 +36,7 @@ public  class PlayOnline extends BorderPane {
     protected final ImageView imageView1;
     protected final ScrollPane scrollPane;
     protected final HBox hBox;
-    protected final ListView <FXMLBase>list_of_Online_users;
+    protected final ListView <OnlineUser>list_of_Online_users;
 
 
     public PlayOnline(Stage stage) {
@@ -140,6 +140,7 @@ public  class PlayOnline extends BorderPane {
         scrollPane.setStyle("-fx-background-color: #ffffff; -fx-hbar-policy: never; -fx-vbar-policy: never;");
 
         hBox.setStyle("-fx-background-color: #ffffff;");
+     //         hBox.setStyle("-fx-background-color: #1978ae;");
 
         list_of_Online_users.setPrefHeight(220.0);
         list_of_Online_users.setPrefWidth(698.0);
@@ -159,16 +160,12 @@ public  class PlayOnline extends BorderPane {
         hBox.getChildren().add(list_of_Online_users);
          initialize();
                  // Initialize the list of custom items
-        List<FXMLBase> items = Arrays.asList(
-                new FXMLBase("dasd 1"),
-                                new FXMLBase("asdasd 1"),
-
-  new FXMLBase("Itadsasdem 1"),
-                 new FXMLBase("Item 1")  );
+        List<OnlineUser> items = Arrays.asList(
+                new OnlineUser("Item 1"),
+                 new OnlineUser("Item 1")  );
                  
            list_of_Online_users.getItems().addAll(items);
-           initialize();
-           stage.setScene(new Scene(this));
+          stage.setScene(new Scene(this));
          
     }
 
@@ -179,28 +176,34 @@ public  class PlayOnline extends BorderPane {
       
 
         // Set up a custom cell factory for the ListView
-//        list_of_Online_users.setCellFactory((ListView<OnlineUser> param) -> new ListCell<OnlineUser>(){
-//            @Override
-//            protected void updateItem(OnlineUser item, boolean empty) {
-//                super.updateItem(item, empty);
-//                
-//                if (item != null && !empty) {
-//                    //            FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemOnlineUser.fxml"));
-////              FXMLLoader loader = new FXMLLoader(getClass().getResource("FXML.fxml"));
-////                        AnchorPane anchorPane = loader.load();
-////                        
-////                FXMLController       controller = loader.getController();
-////                controller.init(item);
-////
-////                      System.out.println("Controller: " + controller);
-//FXMLBase fff=new FXMLBase("sdfsdf");
-//setGraphic(fff);
-//                } else {
-//                    setGraphic(null);
-//                }
-//            }
-//            
-//        });
+        list_of_Online_users.setCellFactory((ListView<OnlineUser> param) -> new ListCell<OnlineUser>(){
+            @Override
+            protected void updateItem(OnlineUser item, boolean empty) {
+                super.updateItem(item, empty);
+                
+                if (item != null && !empty) {
+                    try {
+ItemOnlineUserController controller = new ItemOnlineUserController();
+
+controller.init(item);
+
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemOnlineUser.fxml"));
+                        AnchorPane anchorPane = loader.load();
+                        
+                         controller = loader.getController();
+                        System.out.println("Controller: " + controller);
+                    
+                        setGraphic(anchorPane);
+                        
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    setGraphic(null);
+                }
+            }
+            
+        });
 
         // Set the list of custom items to the ListView
       
