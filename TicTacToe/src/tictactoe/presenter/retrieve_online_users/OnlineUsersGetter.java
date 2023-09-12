@@ -46,8 +46,7 @@ public class OnlineUsersGetter implements Runnable {
     @Override
     public void run() {
         try {
-            while (state) {
-            state=false;
+            
             printStream.println(type);
             printStream.println(user.getUserName());
                 if (dataInputStream.readLine().equals(Constants.SERVER_STOP)) {
@@ -85,7 +84,7 @@ public class OnlineUsersGetter implements Runnable {
                         }
                     }
                 
-            }
+            
         } catch (IOException ex) {
             callback.onError(ex.getMessage());
         }
