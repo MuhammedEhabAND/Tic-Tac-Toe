@@ -8,8 +8,6 @@ package tictactoe.presenter.play_with_other;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import tictactoe.model.User;
 import tictactoe.presenter.retrieve_online_users.ServerResponse;
 import tictactoe.utils.Constants;
 
@@ -23,7 +21,7 @@ public class PlayWithOthers implements Runnable {
     private final ServerResponse callback;
     private final PrintStream printStream;
     private final String type;
-    private final String opUserName;
+    private  String opUserName;
    
 
     public PlayWithOthers( DataInputStream dataInputStream, String user,
@@ -58,15 +56,19 @@ public class PlayWithOthers implements Runnable {
                         if (remoteUserName.equals(user)) {
                             // Server returned to this user
                             System.out.println("here we are");
+                           opUserName = dataInputStream.readLine();
+
                             String message = dataInputStream.readLine();
-                         
-                            if(message.equals(Constants.PLAY_WITH_USER)) {
+
+                            if(message.equals(Constants.SEBD_REQUEST_TO_PLAY)) {
                                 // username 2
                                 // Get Response from dialog
                                 String userResponse = Constants.USER_REJECTED;
                                 printStream.println(Constants.PLAY_WITH_USER_RESPONSE);
-                                printStream.println(user);
+                                printStream.println(opUserName);
                                 printStream.println(userResponse);
+                                
+                                
                             
                             } else if (message.equals(Constants.PLAY_WITH_USER_RESPONSE)) {
                                 // username 1

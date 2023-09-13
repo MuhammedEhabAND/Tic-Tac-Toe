@@ -43,7 +43,6 @@ import tictactoe.utils.Validation;
 
 public  class PlayOnline extends BorderPane implements OnClickItemListener {
     DataInputStream dataInputStream;
-    PrintStream printStream;
     protected final Button button;
     protected final AnchorPane anchorPane;
     protected final ImageView imageView;
@@ -57,18 +56,18 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
 
     private Stage stage;
     private final User user;
-    private final PrintStream outStream;
+    private final PrintStream printStream;
      ArrayList<String> onlineUsersList ;
     protected final ListView <ItemOnlineUser>list_of_Online_users;
 
         
 
 
-    public PlayOnline(Stage stage , User user ,PrintStream outStream ,DataInputStream dataInputStream)  {
+    public PlayOnline(Stage stage , User user ,PrintStream printStream ,DataInputStream dataInputStream)  {
            new Scene(this);
         this.stage = stage;
         this.user = user;
-        this.outStream = outStream;
+        this.printStream = printStream;
         this.dataInputStream = dataInputStream;
         button = new Button();
         anchorPane = new AnchorPane();
@@ -201,7 +200,7 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
                             dataInputStream,
                             user,
                             Constants.GET_USERS,
-                            outStream,
+                            printStream,
                             new ServerResponse() {
                 @Override
                 public void onSuccess() {
@@ -209,7 +208,7 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
                 }
 
                 @Override
-                public void onError(String errorMessage) {
+                public void onError(String errorMessage) {               
                 }
             },onlineUsersList
 
@@ -222,7 +221,7 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
                     new PlayWithOthers(
                             dataInputStream,
                             user.getUserName(),
-                            Constants.PLAY_WITH_USER,
+                            Constants.SEBD_REQUEST_TO_PLAY,
                             printStream,
                             new ServerResponse() {
                 @Override
@@ -252,7 +251,7 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
 
     @Override
     public void onClick(String opponentUserName) {
-        playWithOtherUser(opponentUserName);//To change body of generated methods, choose Tools | Templates.
+       playWithOtherUser(opponentUserName);//To change body of generated methods, choose Tools | Templates.
     }
 }
 
