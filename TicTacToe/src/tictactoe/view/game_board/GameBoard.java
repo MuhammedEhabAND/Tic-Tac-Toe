@@ -1,5 +1,9 @@
 package tictactoe.view.game_board;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +31,7 @@ import tictactoe.model.Move;
 import tictactoe.model.Player;
 import tictactoe.model.Record;
 import tictactoe.model.Symbol;
+import tictactoe.utils.Constants;
 import tictactoe.view.play_offline.PlayOffline;
 import tictactoe.view.result_popup.ResultPopUpDialog;
 
@@ -81,16 +86,41 @@ public class GameBoard extends AnchorPane {
     Record record;
     private final Stage stage;
     
+    private DataInputStream dis;
+    private PrintStream ps;
+    private Socket mySocket;
+    private Boolean isFirst;
+    
 
     public GameBoard(GameType gameType ,Stage stage) {
         this.stage =stage; 
-        this.gameType = gameType;
+        
+        
+        
+        
+        
+//        this.gameType = gameType;
+this.gameType = GameType.ONLINE;
+isFirst = true;
+if (!isFirst) getMoveFromServer();
+        try {
+            mySocket = new  Socket(Constants.HOST, Constants.PORT);
+            dis = new DataInputStream(mySocket.getInputStream());
+            ps = new PrintStream(mySocket.getOutputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
+        
+        
+        
+        
+        
         miniMax = new MiniMax(gameType);
         player1 = new Player("Guest-X", Symbol.X);
         player2 = (gameType == GameType.TWO_PLAYERS) ? new Player("Guest-O", Symbol.O) :new Player("AI", Symbol.O);
         symbol = player1.getSymbol();
-
-        this.gameType = gameType;
         isRecording = isRecordPlaying = false;
 
         game = new Game(player1, player2);
@@ -422,6 +452,58 @@ public class GameBoard extends AnchorPane {
     
     }
     
+    private void getMoveFromServer() {
+        ImageView imageClicked = null;
+        symbol = player2.getSymbol();
+        
+        // Get move from server
+        try {
+            if(dis.readLine().equals(Constants.SERVER_RUNNING)) {
+                String remoteUserName = dis.readLine();
+                System.out.println("remote user name: " + remoteUserName);
+                if(player1.getUserName().equals(remoteUserName)) {
+                    int row = Integer.parseInt(dis.readLine());
+                    int col = Integer.parseInt(dis.readLine());
+            
+                    System.out.println("row: " + row);
+                    System.out.println("col: " + col);
+            
+                    imageClicked = setImage(row, col);
+        
+                    Move move = new Move(symbol, col, row);
+                    if (record != null) record.addMove(move);
+        
+                    addMove(imageClicked);
+                    String winner = game.makeMove(new Move(Symbol.O, col, row));
+                    checkWinner(winner);
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private ImageView setImage(int row, int col) {
+        ImageView imageClicked = null;
+        switch (row) {
+            case 0:
+                if (col == 0) imageClicked = imageView;
+                if (col == 1) imageClicked = imageView0;
+                if (col == 2) imageClicked = imageView1;
+                break;
+            case 1:
+                if (col == 0) imageClicked = imageView2;
+                if (col == 1) imageClicked = imageView3;
+                if (col == 2) imageClicked = imageView4;
+                break;
+            case 2:
+                if (col == 0) imageClicked = imageView5;
+                if (col == 1) imageClicked = imageView6;
+                if (col == 2) imageClicked = imageView7;
+        }
+        return imageClicked;
+    }
+    
 private void playRecorded(Record record) {
     new Thread(() -> {
         reset();
@@ -435,22 +517,7 @@ private void playRecorded(Record record) {
             ArrayList<Move> moves = record.getMoves();
             for (Move move : moves) {
                 int row = move.getRaw(), col = move.getColumn();
-                switch (row) {
-                    case 0:
-                        if (col == 0) imageClicked = imageView;
-                        if (col == 1) imageClicked = imageView0;
-                        if (col == 2) imageClicked = imageView1;
-                        break;
-                    case 1:
-                        if (col == 0) imageClicked = imageView2;
-                        if (col == 1) imageClicked = imageView3;
-                        if (col == 2) imageClicked = imageView4;
-                        break;
-                    case 2:
-                        if (col == 0) imageClicked = imageView5;
-                        if (col == 1) imageClicked = imageView6;
-                        if (col == 2) imageClicked = imageView7;
-                }
+                imageClicked = setImage(row, col);
                 symbol = move.getSymbol();
 
                 addMove(imageClicked);
@@ -479,16 +546,26 @@ private void playRecorded(Record record) {
             ImageView imageClicked = (ImageView) mouseEvent.getSource();
             if(imageClicked.getImage() == null) {
                 Move move = new Move(symbol, y, x);
+                if (gameType == GameType.ONLINE) sendMoveToServer(move);
                 if (record != null) record.addMove(move);
                 addMove(imageClicked);
                 String winner = game.makeMove(move);
                 if(!checkWinner(winner)){
                     if ((gameType == GameType.EASY || gameType == GameType.MEDIUM || gameType == GameType.HARD) && isGameOn) {
                         playCpu();
+                    } else if (gameType == GameType.ONLINE && isGameOn) {
+                        getMoveFromServer();
                     }
                 }
             }
         }
+    }
+    
+    private void sendMoveToServer(Move move) {
+        ps.println(Constants.PLAY_ONLINE);
+        ps.println(player2.getUserName());
+        ps.println(move.getRaw());
+        ps.println(move.getColumn());
     }
     
     private void playCpu() {
@@ -497,22 +574,7 @@ private void playRecorded(Record record) {
         int[] bestMove = miniMax.minimax(game.getBoard(), symbol);
                 
         int row = bestMove[0], col = bestMove[1];
-        switch (row) {
-            case 0:
-                if (col == 0) imageClicked = imageView;
-                if (col == 1) imageClicked = imageView0;
-                if (col == 2) imageClicked = imageView1;
-                break;
-            case 1:
-                if (col == 0) imageClicked = imageView2;
-                if (col == 1) imageClicked = imageView3;
-                if (col == 2) imageClicked = imageView4;
-                break;
-            case 2:
-                if (col == 0) imageClicked = imageView5;
-                if (col == 1) imageClicked = imageView6;
-                if (col == 2) imageClicked = imageView7;
-        }
+        imageClicked = setImage(row, col);
         
         Move move = new Move(symbol, col, row);
         if (record != null) record.addMove(move);

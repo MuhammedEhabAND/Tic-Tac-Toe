@@ -19,5 +19,7 @@ public final static String GET_USERS = "GET_USERS";
     public    final static String VALID_REGISTER="VALID_REGISTER";
     public    final static String HOST="127.0.0.1";
     public    final static int PORT=5008;
+    
+    public final static String PLAY_ONLINE = "PLAY_ONLINE";
 
 }
