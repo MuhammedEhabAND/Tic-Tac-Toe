@@ -110,6 +110,12 @@ if (!isFirst) getMoveFromServer();
         } catch (IOException ex) {
             Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        if(gameType.equals(GameType.ONLINE)) {
+            ps.println(Constants.CHANGE_STATE);
+            ps.println(player1.getUserName());
+            ps.println("in_game");
+        }
 
         
         
@@ -613,17 +619,28 @@ private void playRecorded(Record record) {
             
             if (winner.equals("draw")) {
                 // Draw
+                changeScoreInServer("draw");
             } else if(winner.equals(player1.getUserName()) && !isRecordPlaying) {
                 userScoreInt += 5;
                 userScore.setText(String.valueOf(userScoreInt));
+                changeScoreInServer("win");
       
             } else if (!isRecordPlaying) {
                 cpuScoreInt += 5;   
                 cpuScore.setText(String.valueOf(cpuScoreInt));
+                changeScoreInServer("lose");
             }
             return true;
         }
         return false;
+    }
+    
+    private void changeScoreInServer(String gameState) {
+        if (gameType.equals(GameType.ONLINE)) {
+            ps.println(Constants.CHANGE_SCORE);
+            ps.println(player1.getUserName());
+            ps.println(gameState);
+        }
     }
 
     private void showPopUp(String winner) {

@@ -102,6 +102,12 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         }else {
             System.out.println(validation.getMessage());
         }
+        
+        stage.setOnCloseRequest((event) -> {
+            outStream.println(Constants.CHANGE_STATE);
+            outStream.println(userName);
+            outStream.println("offline");
+        });
 
 
 

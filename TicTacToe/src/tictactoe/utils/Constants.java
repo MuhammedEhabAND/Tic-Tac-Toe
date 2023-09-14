@@ -21,5 +21,9 @@ public final static String GET_USERS = "GET_USERS";
     public    final static int PORT=5008;
     
     public final static String PLAY_ONLINE = "PLAY_ONLINE";
+    
+    public final static String CHANGE_STATE = "CHANGE_STATE";
+    
+    public final static String CHANGE_SCORE = "CHANGE_SCORE";
 
 }

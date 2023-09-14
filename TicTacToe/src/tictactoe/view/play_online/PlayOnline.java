@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tictactoe.GameType;
 import tictactoe.model.User;
 import tictactoe.presenter.auth_server.NetworkListener;
 import tictactoe.presenter.auth_server.NetworkResponse;
@@ -32,6 +33,8 @@ import tictactoe.presenter.retrieve_online_users.OnlineUsersGetter;
 import tictactoe.presenter.retrieve_online_users.ServerResponse;
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
+import tictactoe.view.game_board.GameBoard;
+import tictactoe.view.play_offline.PlayOffline;
 
 public  class PlayOnline extends BorderPane {
     DataInputStream dataInputStream;
