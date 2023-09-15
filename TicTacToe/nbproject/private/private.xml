@@ -3,21 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/D:/Projects/JavaITI/TicTacToeClient/Tic-Tac-Toe/TicTacToe/src/tictactoe/main/TicTacToe.java</file>
-            <file>file:/D:/Projects/JavaITI/TicTacToeClient/Tic-Tac-Toe/TicTacToe/src/tictactoe/utils/Constants.java</file>
-            <file>file:/D:/Projects/JavaITI/TicTacToeClient/Tic-Tac-Toe/TicTacToe/src/tictactoe/view/play_online/PlayOnline.java</file>
-            <file>file:/D:/Projects/JavaITI/TicTacToeClient/Tic-Tac-Toe/TicTacToe/src/tictactoe/view/game_board/GameBoard.java</file>
-=======
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/login/Login.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/game_board/GameBoard.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/utils/Constants.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/main/TicTacToe.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/confirmation_popup/ConfirmationPopUp.java</file>
             <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/accept_invitation/AcceptPopUp.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/presenter/play_with_other/PlayWithOthers.java</file>
             <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/play_online/PlayOnline.java</file>
->>>>>>> feature/online_popup
         </group>
     </open-files>
 </project-private>
