@@ -1,8 +1,7 @@
 package tictactoe.view.play_online;
 
-
-
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -17,6 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,7 +26,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import tictactoe.model.User;
 import tictactoe.presenter.OnClickItemListener;
 import tictactoe.presenter.auth_server.NetworkListener;
@@ -39,9 +42,10 @@ import tictactoe.presenter.retrieve_online_users.OnlineUsersGetter;
 import tictactoe.presenter.retrieve_online_users.ServerResponse;
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
+import tictactoe.view.confirmation_popup.ConfirmationPopUp;
 
+public class PlayOnline extends BorderPane implements OnClickItemListener, Runnable {
 
-public  class PlayOnline extends BorderPane implements OnClickItemListener {
     DataInputStream dataInputStream;
     protected final Button button;
     protected final AnchorPane anchorPane;
@@ -53,18 +57,15 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
     protected final ImageView imageView1;
     protected final ScrollPane scrollPane;
     protected final HBox hBox;
-
     private Stage stage;
     private final User user;
     private final PrintStream printStream;
-     ArrayList<String> onlineUsersList ;
-    protected final ListView <ItemOnlineUser>list_of_Online_users;
+    ArrayList<String> onlineUsersList;
+    protected final ListView<ItemOnlineUser> list_of_Online_users;
+    Thread thead;
 
-        
-
-
-    public PlayOnline(Stage stage , User user ,PrintStream printStream ,DataInputStream dataInputStream)  {
-           new Scene(this);
+    public PlayOnline(Stage stage, User user, PrintStream printStream, DataInputStream dataInputStream) {
+        new Scene(this);
         this.stage = stage;
         this.user = user;
         this.printStream = printStream;
@@ -80,7 +81,7 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
         scrollPane = new ScrollPane();
         hBox = new HBox();
         list_of_Online_users = new ListView();
-        onlineUsersList = new ArrayList<>() ;
+        onlineUsersList = new ArrayList<>();
 
         setMaxHeight(500.0);
         setMaxWidth(700.0);
@@ -165,14 +166,14 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
         scrollPane.setMinHeight(180.0);
         scrollPane.setPrefHeight(223.0);
         scrollPane.setPrefWidth(669.0);
-          scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #ffffff; -fx-hbar-policy: never; -fx-vbar-policy: never;");
 
         hBox.setStyle("-fx-background-color: #ffffff;");
         list_of_Online_users.setPrefHeight(220.0);
         list_of_Online_users.setPrefWidth(698.0);
-                list_of_Online_users.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
+        list_of_Online_users.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
 
         HBox.setMargin(list_of_Online_users, new Insets(0.0));
         scrollPane.setContent(hBox);
@@ -186,76 +187,132 @@ public  class PlayOnline extends BorderPane implements OnClickItemListener {
         anchorPane.getChildren().add(label);
         anchorPane.getChildren().add(imageView1);
         hBox.getChildren().add(list_of_Online_users);
-    retrieveOnlineUsers();
-       
-      
+        retrieveOnlineUsers();
+    showConfirmationPopup("dssdf");
+        thead = new Thread(this);
 
-         
     }
-    void retrieveOnlineUsers() {
-       
-            new Thread(
-                    new OnlineUsersGetter(
-                            true,
-                            dataInputStream,
-                            user,
-                            Constants.GET_USERS,
-                            printStream,
-                            new ServerResponse() {
-                @Override
-                public void onSuccess() {
-                    addOnlineUsersToListView();
-                }
-
-                @Override
-                public void onError(String errorMessage) {               
-                }
-            },onlineUsersList
-
-                    )
-            ) .start();
-       
-    }
-    void playWithOtherUser(String opUserName){
-            new Thread(
-                    new PlayWithOthers(
-                            dataInputStream,
-                            user.getUserName(),
-                            Constants.SEBD_REQUEST_TO_PLAY,
-                            printStream,
-                            new ServerResponse() {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-                }
-            }, opUserName)
-            ) .start();
+  
     
-    }
-        public void addOnlineUsersToListView() {
-             List<ItemOnlineUser> items = new ArrayList<>();
-            for (String userName : onlineUsersList) {
-                if(!userName.equals(user.getUserName())){
-                items.add(    new ItemOnlineUser(this ,userName));
-                           }
-            }
-           list_of_Online_users.getItems().addAll(items);
-        
-          
+    boolean wait = true;
 
-      
+    void reciveRequestToPlay() throws IOException {
+        while (wait) {
+            try {
+                String userNameOfResponC = dataInputStream.readLine();
+                if (userNameOfResponC != null) {
+                    wait = false;
+                    
+                    showConfirmationPopup(userNameOfResponC);
+                    printStream.println(Constants.USER_ACCEPTED);
+                }
+        
+            
+            } catch (IOException ex) { 
+                Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    void reciveResponse() throws IOException {
+        String result = dataInputStream.readLine();
+        System.out.println("reciveResoponse " + result);
+
+        if (result.equals(Constants.USER_ACCEPTED)) {
+            System.out.println("User Accepted");
+        } else {
+            System.out.println("User Rejected");
+        }
+
+    }
+
+    void retrieveOnlineUsers() {
+
+        new Thread(
+                new OnlineUsersGetter(
+                        true,
+                        dataInputStream,
+                        user,
+                        Constants.GET_USERS,
+                        printStream,
+                        new ServerResponse() {
+                    @Override
+                    public void onSuccess() {
+                        addOnlineUsersToListView();
+                        thead.start();
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                }, onlineUsersList
+                )
+        ).start();
+
+    }
+
+    void playWithOtherUser(String opUserName) {
+        new Thread(
+                new PlayWithOthers(
+                        dataInputStream,
+                        user.getUserName(),
+                        Constants.SEND_REQUEST_TO_PLAY,
+                        printStream,
+                        new ServerResponse() {
+                    @Override
+                    public void onSuccess() {
+                        try {
+                            reciveResponse();
+                        } catch (IOException ex) {
+                            Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                }, opUserName)
+        ).start();
+
+    }
+
+    void addOnlineUsersToListView() {
+        List<ItemOnlineUser> items = new ArrayList<>();
+        for (String userName : onlineUsersList) {
+            if (!userName.equals(user.getUserName())) {
+                items.add(new ItemOnlineUser(this, userName));
+            }
+        }
+        list_of_Online_users.getItems().addAll(items);
+
     }
 
     @Override
     public void onClick(String opponentUserName) {
-       playWithOtherUser(opponentUserName);//To change body of generated methods, choose Tools | Templates.
+        thead.stop();
+        playWithOtherUser(opponentUserName);
     }
+
+    @Override
+    public void run() {
+        try {
+            reciveRequestToPlay();
+        } catch (IOException ex) {
+            Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void showConfirmationPopup(String opUserName){
+    
+        ConfirmationPopUp confirmPopUp =new ConfirmationPopUp(opUserName);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.UNDECORATED);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(confirmPopUp);
+        dialogStage.setScene(scene);
+        dialogStage.showAndWait();
+    
+    
+    }
+    
 }
-
-
-
-
-
