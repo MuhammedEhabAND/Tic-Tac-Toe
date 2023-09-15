@@ -1,5 +1,6 @@
 package tictactoe.view.play_online;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -234,19 +235,20 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     }
 
     void reciveResponse() throws IOException {
+        
         System.out.println("=====I am waiting for response");
-        String userName = dataInputStream.readLine(); // Problem
-        System.out.println("==I recived userName" + userName);
-        String result = dataInputStream.readLine(); // Problem
-        System.out.println("===I received result: " + result);
+    //    String userName = dataInputStream.readLine(); // Problem
+    //    System.out.println("==I recived userName" + userName);
+        String resultt = dataInputStream.readLine(); // Problem
+        System.out.println("===I received result: " + resultt);
 
-        if (user.getPassword().equals(userName)) {
-            if (result.equals(Constants.USER_ACCEPTED)) {
+   //     if (user.getUserName().equals(userName)) {
+            if (resultt.equals(Constants.USER_ACCEPTED)) {
                 System.out.println("===User Accepted");
             } else {
                 System.out.println("====User Rejected");
             }
-        }
+     //   }
 
     }
 
@@ -343,7 +345,6 @@ System.out.println("===I will send op user name: "+ opponentUserName);
         confirmPopUp.getYesBtn().setOnMouseClicked((event) -> {   
             thead.stop();
             playWithOtherUser(opUserName);
-        
             dialogStage.close();
         });
         confirmPopUp.getNoBtn().setOnMouseClicked(((event) -> {
@@ -407,7 +408,7 @@ System.out.println("===I will send op user name: "+ opponentUserName);
                                 printStream.println(opUserName);
                                 printStream.println(result);
                                 System.out.println(result);
-//                                printStream.println(opUserName);
+                                //printStream.println(opUserName);
                                 System.out.println(result);
                                 dialogStage.close();
                             }
