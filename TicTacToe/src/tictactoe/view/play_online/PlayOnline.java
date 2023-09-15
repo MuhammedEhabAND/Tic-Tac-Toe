@@ -42,6 +42,7 @@ import tictactoe.presenter.retrieve_online_users.OnlineUsersGetter;
 import tictactoe.presenter.retrieve_online_users.ServerResponse;
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
+import tictactoe.view.accept_invitation.AcceptPopUp;
 import tictactoe.view.confirmation_popup.ConfirmationPopUp;
 
 public class PlayOnline extends BorderPane implements OnClickItemListener, Runnable {
@@ -63,6 +64,8 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     ArrayList<String> onlineUsersList;
     protected final ListView<ItemOnlineUser> list_of_Online_users;
     Thread thead;
+    String result="";
+    
 
     public PlayOnline(Stage stage, User user, PrintStream printStream, DataInputStream dataInputStream) {
         new Scene(this);
@@ -188,7 +191,7 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
         anchorPane.getChildren().add(imageView1);
         hBox.getChildren().add(list_of_Online_users);
         retrieveOnlineUsers();
-    showConfirmationPopup("dssdf");
+    //showConfirmationPopup("Muhammed");
         thead = new Thread(this);
 
     }
@@ -202,9 +205,9 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
                 String userNameOfResponC = dataInputStream.readLine();
                 if (userNameOfResponC != null) {
                     wait = false;
+                    Platform.runLater(() ->showAcceptPopup(userNameOfResponC));
                     
-                    showConfirmationPopup(userNameOfResponC);
-                    printStream.println(Constants.USER_ACCEPTED);
+               //      printStream.println();
                 }
         
             
@@ -288,9 +291,11 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
 
     @Override
     public void onClick(String opponentUserName) {
-        thead.stop();
-        playWithOtherUser(opponentUserName);
-    }
+     
+        Platform.runLater(() ->showConfirmationPopup(opponentUserName));
+       
+      
+ }
 
     @Override
     public void run() {
@@ -302,17 +307,59 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     }
 
     void showConfirmationPopup(String opUserName){
-    
+        
         ConfirmationPopUp confirmPopUp =new ConfirmationPopUp(opUserName);
+        
 
         Stage dialogStage = new Stage();
-        dialogStage.initStyle(StageStyle.UNDECORATED);
+        dialogStage.initStyle(StageStyle.DECORATED);
         dialogStage.initModality(Modality.WINDOW_MODAL);
+        
+        
+        confirmPopUp.getYesBtn().setOnMouseClicked((event) -> {   
+            thead.stop();
+            playWithOtherUser(opUserName);
+        
+            dialogStage.close();
+        });
+        confirmPopUp.getNoBtn().setOnMouseClicked(((event) -> {
+        
+            dialogStage.close();
+        }));
         Scene scene = new Scene(confirmPopUp);
         dialogStage.setScene(scene);
+        
         dialogStage.showAndWait();
     
     
     }
+     void showAcceptPopup(String opUserName){
+        
+        AcceptPopUp confirmPopUp =new AcceptPopUp(opUserName);
+        
+
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.DECORATED);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        confirmPopUp.getYesBtn().setOnMouseClicked((event) -> {
+        result = Constants.USER_ACCEPTED;   
+        System.out.println(result);
+        dialogStage.close();
+        });
+        confirmPopUp.getNoBtn().setOnMouseClicked(((event) -> {
+        result = Constants.USER_REJECTED;
+        System.out.println(result);
+        dialogStage.close();
+        }));
+        
+        
+        Scene scene = new Scene(confirmPopUp);
+        dialogStage.setScene(scene);
+        
+        dialogStage.showAndWait();
+    
+    
+    }
+    
     
 }
