@@ -50,7 +50,6 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
     protected final Label label5;
     protected final ImageView imageView;
     private Stage stage;
-    private PlayOnline playOn;
     DataInputStream dataInputStream;
     PrintStream outStream;
 
@@ -276,7 +275,6 @@ public class Register extends BorderPane implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == signUpBtn) {
-            playOn = new PlayOnline(stage ,new User("","") ,outStream , dataInputStream);
             signUp();
         } else if (event.getSource() == alreadyHaveAccBtn) {
             stage.setScene( new Login(stage, outStream, dataInputStream).getScene());

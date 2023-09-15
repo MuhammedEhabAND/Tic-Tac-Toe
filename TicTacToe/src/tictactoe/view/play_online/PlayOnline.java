@@ -1,8 +1,7 @@
 package tictactoe.view.play_online;
 
-
-
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -11,8 +10,15 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -20,25 +26,30 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import tictactoe.GameType;
+import javafx.stage.StageStyle;
 import tictactoe.model.User;
+import tictactoe.presenter.OnClickItemListener;
 import tictactoe.presenter.auth_server.NetworkListener;
 import tictactoe.presenter.auth_server.NetworkResponse;
 import tictactoe.presenter.auth_validation.AuthInputValidator;
 import tictactoe.presenter.auth_validation.AuthInputValidatorImpl;
 import tictactoe.presenter.auth_validation.Authentication;
 import tictactoe.presenter.auth_validation.AuthenticationImpl;
+import tictactoe.presenter.play_with_other.PlayWithOthers;
 import tictactoe.presenter.retrieve_online_users.OnlineUsersGetter;
 import tictactoe.presenter.retrieve_online_users.ServerResponse;
 import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
 import tictactoe.view.game_board.GameBoard;
 import tictactoe.view.play_offline.PlayOffline;
+import tictactoe.view.confirmation_popup.ConfirmationPopUp;
 
-public  class PlayOnline extends BorderPane {
+public class PlayOnline extends BorderPane implements OnClickItemListener, Runnable {
+
     DataInputStream dataInputStream;
-    PrintStream printStream;
     protected final Button button;
     protected final AnchorPane anchorPane;
     protected final ImageView imageView;
@@ -49,39 +60,19 @@ public  class PlayOnline extends BorderPane {
     protected final ImageView imageView1;
     protected final ScrollPane scrollPane;
     protected final HBox hBox;
-    protected final AnchorPane anchorPane0;
-    protected final Label label0;
-    protected final ImageView imageView2;
-    protected final ImageView imageView3;
-    protected final AnchorPane anchorPane1;
-    protected final Label label1;
-    protected final ImageView imageView4;
-    protected final ImageView imageView5;
-    protected final AnchorPane anchorPane2;
-    protected final Label label2;
-    protected final ImageView imageView6;
-    protected final ImageView imageView7;
-    protected final AnchorPane anchorPane3;
-    protected final Label label3;
-    protected final ImageView imageView8;
-    protected final ImageView imageView9;
-    protected final AnchorPane anchorPane4;
-    protected final Label label4;
-    protected final ImageView imageView10;
-    protected final ImageView imageView11;
     private Stage stage;
     private final User user;
-    private final PrintStream outStream;
-     ArrayList<String> onlineUsersList = new ArrayList<String>() ;
+    private final PrintStream printStream;
+    ArrayList<String> onlineUsersList;
+    protected final ListView<ItemOnlineUser> list_of_Online_users;
+    Thread thead;
 
-    public PlayOnline(Stage stage , User user ,PrintStream outStream ,DataInputStream dataInputStream) {
+    public PlayOnline(Stage stage, User user, PrintStream printStream, DataInputStream dataInputStream) {
         new Scene(this);
         this.stage = stage;
         this.user = user;
-        this.outStream = outStream;
+        this.printStream = printStream;
         this.dataInputStream = dataInputStream;
-        
-        retrieveOnlineUsers();
         button = new Button();
         anchorPane = new AnchorPane();
         imageView = new ImageView();
@@ -92,26 +83,8 @@ public  class PlayOnline extends BorderPane {
         imageView1 = new ImageView();
         scrollPane = new ScrollPane();
         hBox = new HBox();
-        anchorPane0 = new AnchorPane();
-        label0 = new Label();
-        imageView2 = new ImageView();
-        imageView3 = new ImageView();
-        anchorPane1 = new AnchorPane();
-        label1 = new Label();
-        imageView4 = new ImageView();
-        imageView5 = new ImageView();
-        anchorPane2 = new AnchorPane();
-        label2 = new Label();
-        imageView6 = new ImageView();
-        imageView7 = new ImageView();
-        anchorPane3 = new AnchorPane();
-        label3 = new Label();
-        imageView8 = new ImageView();
-        imageView9 = new ImageView();
-        anchorPane4 = new AnchorPane();
-        label4 = new Label();
-        imageView10 = new ImageView();
-        imageView11 = new ImageView();
+        list_of_Online_users = new ListView();
+        onlineUsersList = new ArrayList<>();
 
         setMaxHeight(500.0);
         setMaxWidth(700.0);
@@ -194,155 +167,18 @@ public  class PlayOnline extends BorderPane {
         BorderPane.setAlignment(scrollPane, javafx.geometry.Pos.CENTER);
         scrollPane.setMaxHeight(223.0);
         scrollPane.setMinHeight(180.0);
-        scrollPane.setPrefHeight(212.0);
-        scrollPane.setPrefWidth(700.0);
+        scrollPane.setPrefHeight(223.0);
+        scrollPane.setPrefWidth(669.0);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #ffffff; -fx-hbar-policy: never; -fx-vbar-policy: never;");
 
-        hBox.setPrefHeight(223.0);
-        hBox.setPrefWidth(705.0);
         hBox.setStyle("-fx-background-color: #ffffff;");
+        list_of_Online_users.setPrefHeight(220.0);
+        list_of_Online_users.setPrefWidth(698.0);
+        list_of_Online_users.setOrientation(javafx.geometry.Orientation.HORIZONTAL);
 
-        anchorPane0.setPrefHeight(238.0);
-        anchorPane0.setPrefWidth(116.0);
-        anchorPane0.setStyle("-fx-background-color: #ffffff;");
-
-        label0.setLayoutX(6.0);
-        label0.setLayoutY(82.0);
-        label0.setPrefHeight(67.0);
-        label0.setPrefWidth(132.0);
-        label0.setText("User One ");
-        label0.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        label0.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
-        label0.setFont(new Font(19.0));
-
-        imageView2.setFitHeight(24.0);
-        imageView2.setFitWidth(23.0);
-        imageView2.setLayoutX(101.0);
-        imageView2.setLayoutY(14.0);
-        imageView2.setPickOnBounds(true);
-        imageView2.setPreserveRatio(true);
-      imageView2.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
-
-        imageView3.setFitHeight(109.0);
-        imageView3.setFitWidth(105.0);
-        imageView3.setPickOnBounds(true);
-        imageView3.setPreserveRatio(true);
-        imageView3.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
-
-        anchorPane1.setLayoutX(10.0);
-        anchorPane1.setLayoutY(10.0);
-        anchorPane1.setPrefHeight(229.0);
-        anchorPane1.setPrefWidth(119.0);
-
-        label1.setLayoutX(6.0);
-        label1.setLayoutY(82.0);
-        label1.setPrefHeight(67.0);
-        label1.setPrefWidth(132.0);
-        label1.setText("User One ");
-        label1.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        label1.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
-        label1.setFont(new Font(19.0));
-
-        imageView4.setFitHeight(24.0);
-        imageView4.setFitWidth(23.0);
-        imageView4.setLayoutX(101.0);
-        imageView4.setLayoutY(14.0);
-        imageView4.setPickOnBounds(true);
-        imageView4.setPreserveRatio(true);
-        imageView4.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
-
-        imageView5.setFitHeight(109.0);
-        imageView5.setFitWidth(105.0);
-        imageView5.setPickOnBounds(true);
-        imageView5.setPreserveRatio(true);
-        imageView5.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
-
-        anchorPane2.setLayoutX(30.0);
-        anchorPane2.setLayoutY(50.0);
-        anchorPane2.setPrefHeight(238.0);
-        anchorPane2.setPrefWidth(116.0);
-        anchorPane2.setStyle("-fx-background-color: #ffffff;");
-
-        label2.setLayoutX(6.0);
-        label2.setLayoutY(82.0);
-        label2.setPrefHeight(67.0);
-        label2.setPrefWidth(132.0);
-        label2.setText("User One ");
-        label2.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        label2.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
-        label2.setFont(new Font(19.0));
-
-        imageView6.setFitHeight(24.0);
-        imageView6.setFitWidth(23.0);
-        imageView6.setLayoutX(101.0);
-        imageView6.setLayoutY(14.0);
-        imageView6.setPickOnBounds(true);
-        imageView6.setPreserveRatio(true);
-        imageView6.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
-
-        imageView7.setFitHeight(109.0);
-        imageView7.setFitWidth(105.0);
-        imageView7.setPickOnBounds(true);
-        imageView7.setPreserveRatio(true);
-        imageView7.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
-
-        anchorPane3.setLayoutX(444.0);
-        anchorPane3.setLayoutY(50.0);
-        anchorPane3.setPrefHeight(199.0);
-        anchorPane3.setPrefWidth(140.0);
-        anchorPane3.setStyle("-fx-background-color: #ffffff;");
-
-        label3.setLayoutX(6.0);
-        label3.setLayoutY(82.0);
-        label3.setPrefHeight(67.0);
-        label3.setPrefWidth(132.0);
-        label3.setText("User One ");
-        label3.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        label3.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
-        label3.setFont(new Font(19.0));
-
-        imageView8.setFitHeight(24.0);
-        imageView8.setFitWidth(23.0);
-        imageView8.setLayoutX(101.0);
-        imageView8.setLayoutY(14.0);
-        imageView8.setPickOnBounds(true);
-        imageView8.setPreserveRatio(true);
-        imageView8.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
-
-        imageView9.setFitHeight(109.0);
-        imageView9.setFitWidth(105.0);
-        imageView9.setPickOnBounds(true);
-        imageView9.setPreserveRatio(true);
-        imageView9.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
-
-        anchorPane4.setLayoutX(168.0);
-        anchorPane4.setLayoutY(50.0);
-        anchorPane4.setPrefHeight(229.0);
-        anchorPane4.setPrefWidth(119.0);
-
-        label4.setLayoutX(6.0);
-        label4.setLayoutY(82.0);
-        label4.setPrefHeight(67.0);
-        label4.setPrefWidth(132.0);
-        label4.setText("User One ");
-        label4.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        label4.setTextFill(javafx.scene.paint.Color.valueOf("#33cccc"));
-        label4.setFont(new Font(19.0));
-
-        imageView10.setFitHeight(24.0);
-        imageView10.setFitWidth(23.0);
-        imageView10.setLayoutX(101.0);
-        imageView10.setLayoutY(14.0);
-        imageView10.setPickOnBounds(true);
-        imageView10.setPreserveRatio(true);
-        imageView10.setImage(new Image(getClass().getResource("/tictactoe/resources/status.png").toExternalForm()));
-
-        imageView11.setFitHeight(109.0);
-        imageView11.setFitWidth(105.0);
-        imageView11.setPickOnBounds(true);
-        imageView11.setPreserveRatio(true);
-        imageView11.setImage(new Image(getClass().getResource("/tictactoe/resources/onlinePerson.png").toExternalForm()));
-        hBox.setPadding(new Insets(40.0, 0.0, 0.0, 20.0));
+        HBox.setMargin(list_of_Online_users, new Insets(0.0));
         scrollPane.setContent(hBox);
         BorderPane.setMargin(scrollPane, new Insets(0.0));
         setCenter(scrollPane);
@@ -353,56 +189,133 @@ public  class PlayOnline extends BorderPane {
         anchorPane.getChildren().add(imageView0);
         anchorPane.getChildren().add(label);
         anchorPane.getChildren().add(imageView1);
-        anchorPane0.getChildren().add(label0);
-        anchorPane0.getChildren().add(imageView2);
-        anchorPane0.getChildren().add(imageView3);
-        hBox.getChildren().add(anchorPane0);
-        anchorPane1.getChildren().add(label1);
-        anchorPane1.getChildren().add(imageView4);
-        anchorPane1.getChildren().add(imageView5);
-        hBox.getChildren().add(anchorPane1);
-        anchorPane2.getChildren().add(label2);
-        anchorPane2.getChildren().add(imageView6);
-        anchorPane2.getChildren().add(imageView7);
-        hBox.getChildren().add(anchorPane2);
-        anchorPane3.getChildren().add(label3);
-        anchorPane3.getChildren().add(imageView8);
-        anchorPane3.getChildren().add(imageView9);
-        hBox.getChildren().add(anchorPane3);
-        anchorPane4.getChildren().add(label4);
-        anchorPane4.getChildren().add(imageView10);
-        anchorPane4.getChildren().add(imageView11);
-        hBox.getChildren().add(anchorPane4);
+        hBox.getChildren().add(list_of_Online_users);
+        retrieveOnlineUsers();
+    showConfirmationPopup("dssdf");
+        thead = new Thread(this);
 
     }
-    void retrieveOnlineUsers() {
-       
-            new Thread(
-                    new OnlineUsersGetter(
-                            true,
-                            dataInputStream,
-                            user,
-                            Constants.GET_USERS,
-                            outStream,
-                            new ServerResponse() {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-                }
-            },onlineUsersList
-
-                    )
-            ) .start();
-        
-
-
+  
     
+    boolean wait = true;
 
-
-
+    void reciveRequestToPlay() throws IOException {
+        while (wait) {
+            try {
+                String userNameOfResponC = dataInputStream.readLine();
+                if (userNameOfResponC != null) {
+                    wait = false;
+                    
+                    showConfirmationPopup(userNameOfResponC);
+                    printStream.println(Constants.USER_ACCEPTED);
+                }
+        
             
+            } catch (IOException ex) { 
+                Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
+
+    void reciveResponse() throws IOException {
+        String result = dataInputStream.readLine();
+        System.out.println("reciveResoponse " + result);
+
+        if (result.equals(Constants.USER_ACCEPTED)) {
+            System.out.println("User Accepted");
+        } else {
+            System.out.println("User Rejected");
+        }
+
+    }
+
+    void retrieveOnlineUsers() {
+
+        new Thread(
+                new OnlineUsersGetter(
+                        true,
+                        dataInputStream,
+                        user,
+                        Constants.GET_USERS,
+                        printStream,
+                        new ServerResponse() {
+                    @Override
+                    public void onSuccess() {
+                        addOnlineUsersToListView();
+                        thead.start();
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                }, onlineUsersList
+                )
+        ).start();
+
+    }
+
+    void playWithOtherUser(String opUserName) {
+        new Thread(
+                new PlayWithOthers(
+                        dataInputStream,
+                        user.getUserName(),
+                        Constants.SEND_REQUEST_TO_PLAY,
+                        printStream,
+                        new ServerResponse() {
+                    @Override
+                    public void onSuccess() {
+                        try {
+                            reciveResponse();
+                        } catch (IOException ex) {
+                            Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    @Override
+                    public void onError(String errorMessage) {
+                    }
+                }, opUserName)
+        ).start();
+
+    }
+
+    void addOnlineUsersToListView() {
+        List<ItemOnlineUser> items = new ArrayList<>();
+        for (String userName : onlineUsersList) {
+            if (!userName.equals(user.getUserName())) {
+                items.add(new ItemOnlineUser(this, userName));
+            }
+        }
+        list_of_Online_users.getItems().addAll(items);
+
+    }
+
+    @Override
+    public void onClick(String opponentUserName) {
+        thead.stop();
+        playWithOtherUser(opponentUserName);
+    }
+
+    @Override
+    public void run() {
+        try {
+            reciveRequestToPlay();
+        } catch (IOException ex) {
+            Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    void showConfirmationPopup(String opUserName){
+    
+        ConfirmationPopUp confirmPopUp =new ConfirmationPopUp(opUserName);
+
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.UNDECORATED);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        Scene scene = new Scene(confirmPopUp);
+        dialogStage.setScene(scene);
+        dialogStage.showAndWait();
+    
+    
+    }
+    
 }

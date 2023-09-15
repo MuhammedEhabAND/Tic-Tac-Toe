@@ -48,11 +48,12 @@ public class OnlineUsersGetter implements Runnable {
         try {
             
             printStream.println(type);
-            printStream.println(user.getUserName());
                 if (dataInputStream.readLine().equals(Constants.SERVER_STOP)) {
                         // Server Stopped
                         System.out.println("Server Stopped");
                     } else {
+                                printStream.println(user.getUserName());
+
                         // Server is Running
                         System.out.println("Server is Running");
                         String remoteUserName = dataInputStream.readLine();
