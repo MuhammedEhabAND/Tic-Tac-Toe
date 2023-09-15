@@ -43,5 +43,7 @@ public    final static String LOGIN="LOGIN";
     public final static String CHANGE_STATE = "CHANGE_STATE";
     
     public final static String CHANGE_SCORE = "CHANGE_SCORE";
+    
+    public final static String RESULT = "RESULT";
 
 }

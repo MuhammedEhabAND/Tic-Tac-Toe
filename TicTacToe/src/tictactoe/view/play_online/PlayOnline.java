@@ -45,6 +45,7 @@ import tictactoe.utils.Constants;
 import tictactoe.utils.Validation;
 import tictactoe.view.game_board.GameBoard;
 import tictactoe.view.play_offline.PlayOffline;
+import tictactoe.view.accept_invitation.AcceptPopUp;
 import tictactoe.view.confirmation_popup.ConfirmationPopUp;
 
 public class PlayOnline extends BorderPane implements OnClickItemListener, Runnable {
@@ -66,6 +67,8 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     ArrayList<String> onlineUsersList;
     protected final ListView<ItemOnlineUser> list_of_Online_users;
     Thread thead;
+    String result="";
+    
 
     public PlayOnline(Stage stage, User user, PrintStream printStream, DataInputStream dataInputStream) {
         new Scene(this);
@@ -191,7 +194,7 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
         anchorPane.getChildren().add(imageView1);
         hBox.getChildren().add(list_of_Online_users);
         retrieveOnlineUsers();
-    showConfirmationPopup("dssdf");
+    //showConfirmationPopup("Muhammed");
         thead = new Thread(this);
 
     }
@@ -200,31 +203,49 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     boolean wait = true;
 
     void reciveRequestToPlay() throws IOException {
+        System.out.println("=====I am waiting for any request");
         while (wait) {
-            try {
+//            try {
                 String userNameOfResponC = dataInputStream.readLine();
+                System.out.println("=== I recieved userName: " + userNameOfResponC);
                 if (userNameOfResponC != null) {
                     wait = false;
+                    Platform.runLater(() ->showAcceptPopup(userNameOfResponC));
                     
-                    showConfirmationPopup(userNameOfResponC);
-                    printStream.println(Constants.USER_ACCEPTED);
-                }
+               //      printStream.println();
+               
+//               System.out.println("===My user name is: " + user.getUserName());
+//               if (user.getUserName().equals(userNameOfResponC)) {
+//                   System.out.println("===This is my username");
+//                System.out.println("reciveRequesToPlay    " + userNameOfResponC);
+//                System.out.println("===I will print result constant");
+//                      printStream.println(Constants.RESULT);
+//                      System.out.println("===I am waiting for server running");
+//                      dataInputStream.readLine();
+//                      System.out.println("===I will send acceptance");
+//                    printStream.println(Constants.USER_ACCEPTED);
+//                }} else {System.out.println("===This is NOT my username");}
         
             
-            } catch (IOException ex) { 
-                Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (IOException ex) { 
+//                Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     void reciveResponse() throws IOException {
-        String result = dataInputStream.readLine();
-        System.out.println("reciveResoponse " + result);
+        System.out.println("=====I am waiting for response");
+        String userName = dataInputStream.readLine(); // Problem
+        System.out.println("==I recived userName" + userName);
+        String result = dataInputStream.readLine(); // Problem
+        System.out.println("===I received result: " + result);
 
-        if (result.equals(Constants.USER_ACCEPTED)) {
-            System.out.println("User Accepted");
-        } else {
-            System.out.println("User Rejected");
+        if (user.getPassword().equals(userName)) {
+            if (result.equals(Constants.USER_ACCEPTED)) {
+                System.out.println("===User Accepted");
+            } else {
+                System.out.println("====User Rejected");
+            }
         }
 
     }
@@ -291,9 +312,14 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
 
     @Override
     public void onClick(String opponentUserName) {
-        thead.stop();
-        playWithOtherUser(opponentUserName);
-    }
+     
+        Platform.runLater(() ->showConfirmationPopup(opponentUserName));
+       
+//      thead.stop();
+System.out.println("==== Clicked");
+System.out.println("===I will send op user name: "+ opponentUserName);
+//        playWithOtherUser(opponentUserName);
+ }
 
     @Override
     public void run() {
@@ -305,17 +331,99 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     }
 
     void showConfirmationPopup(String opUserName){
-    
+        
         ConfirmationPopUp confirmPopUp =new ConfirmationPopUp(opUserName);
+        
 
         Stage dialogStage = new Stage();
-        dialogStage.initStyle(StageStyle.UNDECORATED);
+        dialogStage.initStyle(StageStyle.DECORATED);
         dialogStage.initModality(Modality.WINDOW_MODAL);
+        
+        
+        confirmPopUp.getYesBtn().setOnMouseClicked((event) -> {   
+            thead.stop();
+            playWithOtherUser(opUserName);
+        
+            dialogStage.close();
+        });
+        confirmPopUp.getNoBtn().setOnMouseClicked(((event) -> {
+        
+            dialogStage.close();
+        }));
         Scene scene = new Scene(confirmPopUp);
         dialogStage.setScene(scene);
+        
         dialogStage.showAndWait();
     
     
     }
+     void showAcceptPopup(String opUserName){
+         
+//               System.out.println("===My user name is: " + user.getUserName());
+//               if (user.getUserName().equals(userNameOfResponC)) {
+//                   System.out.println("===This is my username");
+//                System.out.println("reciveRequesToPlay    " + userNameOfResponC);
+//                System.out.println("===I will print result constant");
+//                      printStream.println(Constants.RESULT);
+//                      System.out.println("===I am waiting for server running");
+//                      dataInputStream.readLine();
+//                      System.out.println("===I will send acceptance");
+//                    printStream.println(Constants.USER_ACCEPTED);
+//                }} else {System.out.println("===This is NOT my username");}
+        
+        AcceptPopUp confirmPopUp =new AcceptPopUp(opUserName);
+        
+
+        Stage dialogStage = new Stage();
+        dialogStage.initStyle(StageStyle.DECORATED);
+        dialogStage.initModality(Modality.WINDOW_MODAL);
+        confirmPopUp.getYesBtn().setOnMouseClicked((event) -> {
+            try {
+                result = Constants.USER_ACCEPTED;
+                
+                System.out.println("====I will send result constant");
+                printStream.println(Constants.RESULT);
+                if(dataInputStream.readLine().equals(Constants.SERVER_RUNNING)) {
+                        System.out.println("====I will send result: " + result);
+                        printStream.println(opUserName);
+                        printStream.println(result);
+
+                        System.out.println(result);
+                        dialogStage.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        confirmPopUp.getNoBtn().setOnMouseClicked(((event) -> {
+            try {
+                    result = Constants.USER_REJECTED;
+                    System.out.println("====I will send result constant");
+                    printStream.println(Constants.RESULT);
+                        
+                            if(dataInputStream.readLine().equals(Constants.SERVER_RUNNING)) {
+                       
+                                System.out.println("====I will send result: " + result + "to " + opUserName);
+                                printStream.println(opUserName);
+                                printStream.println(result);
+                                System.out.println(result);
+//                                printStream.println(opUserName);
+                                System.out.println(result);
+                                dialogStage.close();
+                            }
+                     } catch (IOException ex) {
+                            Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+        }));
+        
+        
+        Scene scene = new Scene(confirmPopUp);
+        dialogStage.setScene(scene);
+        
+        dialogStage.showAndWait();
+    
+    
+    }
+    
     
 }

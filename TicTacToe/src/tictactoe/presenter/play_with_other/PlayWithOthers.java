@@ -32,9 +32,12 @@ public class PlayWithOthers implements Runnable {
         this.opUserName = opUserName;
 
     }
+    
 
     void sendRequestToPlay() {
+        System.out.println("===I will send my name: " + myUserName);
         printStream.println(myUserName);
+        System.out.println("===I will sned op name: " + opUserName);
         printStream.println(opUserName);
         callback.onSuccess();
     }
