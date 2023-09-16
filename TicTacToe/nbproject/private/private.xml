@@ -4,11 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/game_board/GameBoard.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/login/Login.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/play_offline/PlayOffline.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/utils/Constants.java</file>
+            <file>file:/G:/Java%20ITI/draft2/TicTacToe/nbproject/build-impl.xml</file>
             <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/main/TicTacToe.java</file>
-            <file>file:/G:/Java%20ITI/draft2/TicTacToe/src/tictactoe/view/play_online/PlayOnline.java</file>
         </group>
     </open-files>
 </project-private>

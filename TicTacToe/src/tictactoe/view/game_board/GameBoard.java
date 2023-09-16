@@ -2,10 +2,13 @@ package tictactoe.view.game_board;
 
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -90,6 +93,7 @@ public class GameBoard extends AnchorPane {
     
     private DataInputStream dis;
     private BufferedReader bufferedReader;
+    private BufferedWriter bufferedWriter;
     private PrintStream ps;
     private Socket mySocket;
     private Boolean isFirst;
@@ -109,8 +113,11 @@ public class GameBoard extends AnchorPane {
         try {
             mySocket = new  Socket(Constants.HOST, Constants.PORT);
             dis = new DataInputStream(mySocket.getInputStream());
-            bufferedReader = new BufferedReader(new InputStreamReader(dis));
             ps = new PrintStream(mySocket.getOutputStream());
+       
+            bufferedReader = new BufferedReader(new InputStreamReader(dis));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(ps));
+            
         } catch (IOException ex) {
             Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -496,12 +503,12 @@ public class GameBoard extends AnchorPane {
             //if(res.equals(Constants.SERVER_RUNNING)) {
                 System.out.println("waiting for the server to play ");  
                 
-                String res1= bufferedReader.readLine();   
+                String res1= dis.readLine();   
                 System.out.println("second response : "+res1);
                 int row = Integer.parseInt(res1);
                     System.out.println("row: " + row);
                     
-                    int col = Integer.parseInt(bufferedReader.readLine());
+                    int col = Integer.parseInt(dis.readLine());
                     
                     System.out.println("col: " + col);
             
@@ -553,7 +560,7 @@ private void playRecorded(Record record) {
         ImageView imageClicked = null;
 
         if (record != null) {
-            player1 = record.getPlayer1();
+            
             player2 = record.getPlayer2();
             ArrayList<Move> moves = record.getMoves();
             for (Move move : moves) {
@@ -583,14 +590,6 @@ private void playRecorded(Record record) {
     
     protected void onTap(MouseEvent mouseEvent, int x, int y){
         
-        try {
-            mySocket = new  Socket(Constants.HOST, Constants.PORT);
-            dis = new DataInputStream(mySocket.getInputStream());
-            bufferedReader = new BufferedReader(new InputStreamReader(dis));
-            ps = new PrintStream(mySocket.getOutputStream());
-        } catch (IOException ex) {
-            Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
-        }
         if(isGameOn && isRecordPlaying== false){
             ImageView imageClicked = (ImageView) mouseEvent.getSource();
             if(imageClicked.getImage() == null) {
@@ -611,18 +610,21 @@ private void playRecorded(Record record) {
     }
     
     private void sendMoveToServer(Move move) {
-        ps.println(Constants.PLAY_ONLINE);
+        
         try {
+            ps.println(Constants.PLAY_ONLINE);
             dis.readLine();
-                    } catch (IOException ex) {
+            ps.println(player2.getUserName());
+            ps.println(move.getRaw());
+            ps.println(move.getColumn());
+           
+            
+        } catch (IOException ex) {
             Logger.getLogger(GameBoard.class.getName()).log(Level.SEVERE, null, ex);
+             System.out.println("send column");
         }
-        ps.println(player2.getUserName());
-        
-        ps.println(move.getRaw());
-        
-        ps.println(move.getColumn());
-        
+
+           
         }
     
     private void playCpu() {

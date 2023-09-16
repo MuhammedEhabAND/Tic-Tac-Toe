@@ -27,6 +27,7 @@ import tictactoe.view.register.Register;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
+import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 
 public class Login extends BorderPane implements EventHandler<ActionEvent> {
@@ -37,7 +38,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
     protected final ImageView imageView;
     protected final AnchorPane anchorPane0;
     protected final TextField nameTextField;
-    protected final TextField passwordTextField;
+    protected final PasswordField passwordTextField;
     protected final Label label2;
     protected final Label label3;
     protected final Label label4;
@@ -125,7 +126,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         imageView = new ImageView();
         anchorPane0 = new AnchorPane();
         nameTextField = new TextField();
-        passwordTextField = new TextField();
+        passwordTextField = new PasswordField();
         label2 = new Label();
         label3 = new Label();
         label4 = new Label();
@@ -200,7 +201,7 @@ public class Login extends BorderPane implements EventHandler<ActionEvent> {
         passwordTextField.setPrefHeight(31.0);
         passwordTextField.setPrefWidth(340.0);
         passwordTextField.setPromptText("Enter your password ");
-        passwordTextField.setStyle("-fx-background-color: transparent; -fx-border-color: #1978ae; -fx-border-width: 0px 0px 2px 0px;");
+        passwordTextField.setStyle("-fx-background-color: transparent; -fx-border-color: #1978ae; -fx-border-width: 0px 0px 2px 0px;-fx-password-character: '*';");
 
         label2.setLayoutX(14.0);
         label2.setLayoutY(177.0);
