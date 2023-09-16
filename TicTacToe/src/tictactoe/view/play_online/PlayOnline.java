@@ -17,8 +17,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,7 +55,7 @@ import tictactoe.view.confirmation_popup.ConfirmationPopUp;
 public class PlayOnline extends BorderPane implements OnClickItemListener, Runnable {
 
     DataInputStream dataInputStream;
-    protected final Button button;
+    protected final Button random;
     protected final AnchorPane anchorPane;
     protected final ImageView imageView;
     protected final Text text;
@@ -69,7 +72,7 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
     protected final ListView<ItemOnlineUser> list_of_Online_users;
     Thread thead;
     String result="";
-    
+
 
     public PlayOnline(Stage stage, User user, PrintStream printStream, DataInputStream dataInputStream) {
         new Scene(this);
@@ -77,7 +80,7 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
         this.user = user;
         this.printStream = printStream;
         this.dataInputStream = dataInputStream;
-        button = new Button();
+        random = new Button();
         anchorPane = new AnchorPane();
         imageView = new ImageView();
         text = new Text();
@@ -98,15 +101,15 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
         setPrefWidth(700.0);
         setStyle("-fx-background-color: #ffffff;");
 
-        BorderPane.setAlignment(button, javafx.geometry.Pos.CENTER);
-        button.setMnemonicParsing(false);
-        button.setPrefHeight(45.0);
-        button.setPrefWidth(348.0);
-        button.setStyle("-fx-background-color: #1978ae; -fx-border-radius: 10px;");
-        button.setText("Play Ramdom");
-        button.setTextFill(javafx.scene.paint.Color.WHITE);
-        BorderPane.setMargin(button, new Insets(0.0, 0.0, 20.0, 0.0));
-        setBottom(button);
+        BorderPane.setAlignment(random, javafx.geometry.Pos.CENTER);
+        random.setMnemonicParsing(false);
+        random.setPrefHeight(45.0);
+        random.setPrefWidth(348.0);
+        random.setStyle("-fx-background-color: #1978ae; -fx-border-radius: 10px;");
+        random.setText("Play Ramdom");
+        random.setTextFill(javafx.scene.paint.Color.WHITE);
+        BorderPane.setMargin(random, new Insets(0.0, 0.0, 20.0, 0.0));
+        setBottom(random);
 
         BorderPane.setAlignment(anchorPane, javafx.geometry.Pos.CENTER);
         anchorPane.setMaxHeight(500.0);
@@ -197,6 +200,18 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
         retrieveOnlineUsers();
     //showConfirmationPopup("Muhammed");
         thead = new Thread(this);
+            random.setOnAction((event) -> {
+                        Random random = new Random();
+
+                
+                       int randomIndex = random.nextInt(onlineUsersList.size());
+
+        String randomOpponentUserName = onlineUsersList.get(randomIndex);
+        
+        
+                Platform.runLater(() ->showConfirmationPopup(randomOpponentUserName));
+
+    });
 
     }
   
@@ -355,7 +370,7 @@ System.out.println("===I will send op user name: "+ opponentUserName);
         dialogStage.setScene(scene);
         
         dialogStage.showAndWait();
-    
+
     
     }
      void showAcceptPopup(String opUserName){
@@ -425,6 +440,6 @@ System.out.println("===I will send op user name: "+ opponentUserName);
     
     
     }
-    
-    
+   
+
 }

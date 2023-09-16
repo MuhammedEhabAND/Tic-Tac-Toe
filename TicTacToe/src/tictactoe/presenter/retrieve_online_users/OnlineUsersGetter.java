@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import javafx.collections.ObservableList;
 import tictactoe.model.User;
 import tictactoe.presenter.auth_server.NetworkResponse;
 import tictactoe.utils.Constants;
