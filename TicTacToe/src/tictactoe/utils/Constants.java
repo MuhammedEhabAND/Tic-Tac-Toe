@@ -20,6 +20,8 @@ public    final static String LOGIN="LOGIN";
     public final static String USER_REJECTED = "USER_REJECTED";
         public final static String RECEIVE_REQUEST_FROM_SERVER = "RECEIVE_REQUEST_FROM_SERVER";
         public final static String NoThingArrive = "NoThingArrive";
+        
+    public static String PRINT_NEXT_MOVE = "PRINT_NEXT_MOVE";
 
 
 

@@ -234,18 +234,25 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
         }
     }
 
-    void reciveResponse() throws IOException {
+    void reciveResponse(String opponentUsername) throws IOException {
         
         System.out.println("=====I am waiting for response");
     //    String userName = dataInputStream.readLine(); // Problem
     //    System.out.println("==I recived userName" + userName);
         String resultt = dataInputStream.readLine(); // Problem
         System.out.println("===I received result: " + resultt);
-
+         
+        
    //     if (user.getUserName().equals(userName)) {
             if (resultt.equals(Constants.USER_ACCEPTED)) {
+                System.out.println("GameBoard opened");
+                
+         GameBoard gameBoard = new GameBoard(GameType.ONLINE , stage , true , user.getUserName() ,opponentUsername );
+                        Scene gameScene = new Scene(gameBoard);
+                        
+                       Platform.runLater(() ->stage.setScene(gameScene));
                 System.out.println("===User Accepted");
-            } else {
+                           } else {
                 System.out.println("====User Rejected");
             }
      //   }
@@ -288,7 +295,7 @@ public class PlayOnline extends BorderPane implements OnClickItemListener, Runna
                     @Override
                     public void onSuccess() {
                         try {
-                            reciveResponse();
+                            reciveResponse(opUserName);
                         } catch (IOException ex) {
                             Logger.getLogger(PlayOnline.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -381,14 +388,16 @@ System.out.println("===I will send op user name: "+ opponentUserName);
         confirmPopUp.getYesBtn().setOnMouseClicked((event) -> {
             try {
                 result = Constants.USER_ACCEPTED;
-                
                 System.out.println("====I will send result constant");
                 printStream.println(Constants.RESULT);
                 if(dataInputStream.readLine().equals(Constants.SERVER_RUNNING)) {
                         System.out.println("====I will send result: " + result);
                         printStream.println(opUserName);
                         printStream.println(result);
-
+      
+                        GameBoard gameBoard = new GameBoard(GameType.ONLINE , stage , false , user.getUserName() , opUserName);
+                        Scene gameScene = new Scene(gameBoard);
+                        stage.setScene(gameScene);
                         System.out.println(result);
                         dialogStage.close();
                 }
